@@ -109,31 +109,489 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
     <div class="abilities-grid">
       <div class="ability full">
         <div class="ability-header"><span class="ability-tag passive">passive</span><span class="ability-name">Kinetic Storage</span></div>
-        <div class="ability-desc">All force and damage received is halved. The remainder converts into Volts stored in the body, building from 1 through 5.</div>
+        <div class="ability-desc">All damage received is halved — the absorbed half converts to stored damage points. Points persist through healing. Spending points uses abilities; remainder stays in storage.</div>
         <div class="volt-tiers">
-          <div class="volt-tier"><span class="volt-num">Volt 1</span><span class="volt-tier-desc">Enhanced strength and speed — body faintly crackles</span></div>
-          <div class="volt-tier"><span class="volt-num">Volt 2</span><span class="volt-tier-desc">Electrically charged strikes — anything hit is shocked</span></div>
-          <div class="volt-tier"><span class="volt-num">Volt 3</span><span class="volt-tier-desc">Short range electrical burst — repels anything close</span></div>
-          <div class="volt-tier"><span class="volt-num">Volt 4</span><span class="volt-tier-desc">Conducted through surfaces — electrifies anything touched</span></div>
-          <div class="volt-tier"><span class="volt-num">Volt 5</span><span class="volt-tier-desc">Fires concentrated electrical projectiles at range</span></div>
+          <div class="volt-tier"><span class="volt-num">Volt 1</span><span class="volt-tier-desc">Always active via heartbeat · advantage on one STR roll per combat</span></div>
+          <div class="volt-tier"><span class="volt-num">Volt 2</span><span class="volt-tier-desc">5 pts · on hit: stun 1 turn + d8+STR shock damage</span></div>
+          <div class="volt-tier"><span class="volt-num">Volt 3</span><span class="volt-tier-desc">10 pts · 15ft burst same as Lv2 (+5ft per extra 5 pts spent)</span></div>
+          <div class="volt-tier"><span class="volt-num">Volt 4</span><span class="volt-tier-desc">30 pts · full body hazard · touch or electrified surface: 3d8+STR</span></div>
+          <div class="volt-tier"><span class="volt-num">Volt 5</span><span class="volt-tier-desc">50 pts · nail arc lightning · 5d8 + shock (d20 15+ to clear per turn) + electrified (2dmg/turn while shocked)</span></div>
         </div>
       </div>
       <div class="ability">
         <div class="ability-header"><span class="ability-tag">active</span><span class="ability-name">Discharge</span></div>
-        <div class="ability-desc">Using any Volt level ability expels all stored Volts at once.</div>
+        <div class="ability-desc">Spend stored points to use any Volt ability. The cost is deducted and the remainder stays in storage — points don't fully reset on use.</div>
         <div class="limits-label">Limits</div>
-        <div class="limit-item"><div class="limit-dot"></div><div class="limit-text">Volts do not decay — but using any ability resets storage to zero.</div></div>
+        <div class="limit-item"><div class="limit-dot"></div><div class="limit-text">Volts do not decay — storage persists between combats and through healing.</div></div>
       </div>
       <div class="ability">
         <div class="ability-header"><span class="ability-tag passive">passive</span><span class="ability-name">Overcharge</span></div>
-        <div class="ability-desc">Taking damage at Volt 5 still absorbs as normal, but the excess discharges back at the attacker at 1.5× the original force.</div>
+        <div class="ability-desc">Taking damage at 50+ stored still absorbs as normal — but excess discharges back at the attacker at 1.5× the original incoming force.</div>
       </div>
       <div class="ability full">
         <div class="ability-header"><span class="ability-tag bonus">known bonus</span><span class="ability-name">Heartbeat Trickle</span></div>
-        <div class="ability-desc">The passive force of her own heartbeat feeds a constant trickle of Volts. She is always at Volt 1 — and her heart cannot fail naturally. Discovered as a direct result of her condition.</div>
+        <div class="ability-desc">Her heartbeat feeds a constant Volt trickle — she is always at Volt 1 with unknown, uncontrollable cooldown. Her heart cannot fail naturally. Discovered as a direct result of her condition.</div>
       </div>
     </div>
   </div>
+
+  <!-- VOLT TRACKER -->
+  <div class="card" id="volt-tracker">
+    <style>
+    #volt-tracker { overflow: visible; }
+
+    /* storage display */
+    .vt-storage {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: .9rem;
+    }
+    .vt-pts-block { flex: 1; }
+    .vt-pts-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--cyan);
+      text-shadow: 0 0 20px rgba(0,229,255,.5), 0 0 40px rgba(0,229,255,.2);
+      transition: color .3s, text-shadow .3s;
+    }
+    .vt-pts-num.v5 { color: var(--gold); text-shadow: 0 0 20px rgba(255,229,122,.6), 0 0 40px rgba(255,229,122,.2); }
+    .vt-pts-num.v4 { color: #5dcfdf; text-shadow: 0 0 20px rgba(93,207,223,.5); }
+    .vt-pts-num.low { color: var(--text-dim); text-shadow: none; }
+    .vt-pts-label {
+      font-family: var(--font-display);
+      font-size: .56rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-top: .15rem;
+    }
+    .vt-tier-badge {
+      text-align: right;
+    }
+    .vt-tier-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      transition: color .3s, text-shadow .3s;
+    }
+    .vt-tier-sub {
+      font-family: var(--font-display);
+      font-size: .52rem;
+      color: var(--text-dim);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: .1rem;
+    }
+
+    /* volt tier bar */
+    .vt-bar-row {
+      display: flex;
+      gap: 3px;
+      margin-bottom: .9rem;
+    }
+    .vt-seg {
+      flex: 1;
+      height: 6px;
+      border-radius: 2px;
+      background: rgba(0,229,255,.08);
+      border: 1px solid rgba(0,229,255,.1);
+      transition: background .3s, box-shadow .3s;
+    }
+    .vt-seg.active { background: var(--cyan2); box-shadow: 0 0 8px rgba(0,229,255,.5); }
+    .vt-seg.active.s4 { background: #5dcfdf; box-shadow: 0 0 8px rgba(93,207,223,.5); }
+    .vt-seg.active.s5 { background: var(--gold); box-shadow: 0 0 10px rgba(255,229,122,.6); }
+    .vt-seg-labels {
+      display: flex;
+      gap: 3px;
+      margin-top: .2rem;
+      margin-bottom: .9rem;
+    }
+    .vt-seg-label {
+      flex: 1;
+      font-family: var(--font-display);
+      font-size: .42rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: .08em;
+      text-align: center;
+    }
+    .vt-seg-label.active { color: var(--cyan2); }
+    .vt-seg-label.active.s5 { color: var(--gold); }
+
+    /* damage input row */
+    .vt-dmg-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+      margin-bottom: .65rem;
+    }
+    .vt-input-block {
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .vt-input-label {
+      font-family: var(--font-display);
+      font-size: .5rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .vt-input-row {
+      display: flex;
+      gap: .35rem;
+      align-items: center;
+    }
+    .vt-num {
+      font-family: var(--font-display);
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--bg-inset);
+      border: 1px solid var(--border2);
+      padding: .3rem .5rem;
+      width: 62px;
+      text-align: center;
+      outline: none;
+      border-radius: var(--radius-sm);
+      -moz-appearance: textfield;
+    }
+    .vt-num::-webkit-outer-spin-button,
+    .vt-num::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .vt-num:focus { border-color: var(--cyan3); }
+    .vt-btn {
+      font-family: var(--font-display);
+      font-size: .6rem;
+      font-weight: 700;
+      padding: .3rem .7rem;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid;
+      cursor: pointer;
+      transition: all .15s;
+      letter-spacing: .06em;
+      white-space: nowrap;
+    }
+    .vt-btn.take {
+      background: rgba(255,107,107,.08);
+      border-color: rgba(255,107,107,.3);
+      color: var(--warn);
+    }
+    .vt-btn.take:hover { background: rgba(255,107,107,.18); }
+    .vt-btn.spend {
+      background: rgba(0,229,255,.07);
+      border-color: rgba(0,229,255,.22);
+      color: var(--cyan2);
+    }
+    .vt-btn.spend:hover { background: rgba(0,229,255,.15); }
+    .vt-btn.reset-s {
+      font-size: .5rem;
+      padding: .25rem .55rem;
+      background: transparent;
+      border-color: rgba(0,229,255,.12);
+      color: var(--text-dim);
+    }
+    .vt-btn.reset-s:hover { border-color: rgba(0,229,255,.3); color: var(--text-mid); }
+
+    /* last action log */
+    .vt-log {
+      font-family: var(--font-display);
+      font-size: .54rem;
+      color: var(--text-dim);
+      letter-spacing: .06em;
+      padding: .38rem .6rem;
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: .7rem;
+      min-height: 1.6rem;
+      line-height: 1.5;
+    }
+    .vt-log b { color: var(--text-mid); }
+    .vt-log .gain { color: var(--cyan2); }
+    .vt-log .spend-c { color: var(--gold); }
+    .vt-log .warn { color: var(--warn); }
+
+    /* ability quick-use buttons */
+    .vt-ability-grid {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+    }
+    .vt-ability-row {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .45rem .65rem;
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: border-color .2s, opacity .2s;
+    }
+    .vt-ability-row.locked { opacity: .35; }
+    .vt-ability-row.unlocked { border-color: rgba(0,229,255,.18); }
+    .vt-ability-row.active-volt { border-color: var(--cyan2); background: rgba(0,180,212,.06); }
+
+    .vt-ab-tier {
+      font-family: var(--font-display);
+      font-size: .62rem;
+      font-weight: 700;
+      min-width: 44px;
+      flex-shrink: 0;
+      letter-spacing: .04em;
+    }
+    .vt-ab-cost {
+      font-family: var(--font-display);
+      font-size: .5rem;
+      color: var(--text-dim);
+      letter-spacing: .1em;
+      min-width: 38px;
+      flex-shrink: 0;
+    }
+    .vt-ab-desc {
+      font-size: .58rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+      flex: 1;
+    }
+    .vt-ability-row.unlocked .vt-ab-desc { color: var(--text-mid); }
+    .vt-ability-row.active-volt .vt-ab-desc { color: var(--text); }
+    .vt-ab-use {
+      font-family: var(--font-display);
+      font-size: .52rem;
+      font-weight: 700;
+      padding: .22rem .55rem;
+      border-radius: 99px;
+      border: 1.5px solid rgba(0,229,255,.2);
+      background: rgba(0,229,255,.06);
+      color: var(--cyan2);
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .vt-ab-use:hover { background: rgba(0,229,255,.15); border-color: var(--cyan2); }
+    .vt-ab-use:disabled, .vt-ability-row.locked .vt-ab-use {
+      opacity: .3; cursor: not-allowed; pointer-events: none;
+    }
+
+    /* shock / electrified tracker */
+    .vt-status-section {
+      margin-top: .7rem;
+      padding-top: .7rem;
+      border-top: 1px solid var(--border);
+    }
+    .vt-status-label {
+      font-family: var(--font-display);
+      font-size: .52rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: .45rem;
+    }
+    .vt-conditions {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .vt-cond {
+      display: flex;
+      flex-direction: column;
+      gap: .25rem;
+      padding: .45rem .6rem;
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      flex: 1;
+      min-width: 130px;
+    }
+    .vt-cond.active-cond { border-color: rgba(255,229,122,.3); background: rgba(255,229,122,.04); }
+    .vt-cond-name {
+      font-family: var(--font-display);
+      font-size: .56rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+    }
+    .vt-cond.active-cond .vt-cond-name { color: var(--gold); }
+    .vt-cond-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      flex-shrink: 0;
+    }
+    .vt-cond.active-cond .vt-cond-dot { background: var(--gold); box-shadow: 0 0 5px var(--gold); animation: vt-pulse 1.2s ease-in-out infinite; }
+    @keyframes vt-pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+    .vt-cond-desc {
+      font-size: .5rem;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+    .vt-cond.active-cond .vt-cond-desc { color: var(--text-mid); }
+    .vt-cond-btns { display: flex; gap: .3rem; margin-top: .1rem; }
+    .vt-cond-btn {
+      font-family: var(--font-display);
+      font-size: .48rem;
+      font-weight: 700;
+      padding: .18rem .45rem;
+      border-radius: 99px;
+      border: 1px solid rgba(0,229,255,.15);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .vt-cond-btn:hover { border-color: var(--cyan3); color: var(--cyan2); }
+    .vt-cond-btn.clear { border-color: rgba(255,107,107,.2); color: rgba(255,107,107,.5); }
+    .vt-cond-btn.clear:hover { border-color: var(--warn); color: var(--warn); }
+
+    /* overcharge warning */
+    .vt-overcharge {
+      display: none;
+      margin-top: .5rem;
+      padding: .4rem .65rem;
+      background: rgba(255,229,122,.06);
+      border: 1px solid rgba(255,229,122,.28);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: .54rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: .06em;
+    }
+    .vt-overcharge.visible { display: block; }
+    </style>
+
+    <div class="sec-label">Volt Storage — Combat Tracker</div>
+
+    <!-- STORAGE + TIER BADGE -->
+    <div class="vt-storage">
+      <div class="vt-pts-block">
+        <div class="vt-pts-num low" id="vt-pts">0</div>
+        <div class="vt-pts-label">stored damage pts</div>
+      </div>
+      <div class="vt-tier-badge">
+        <div class="vt-tier-name" id="vt-tier-name" style="color:var(--text-dim)">Volt 1</div>
+        <div class="vt-tier-sub" id="vt-tier-sub">heartbeat only</div>
+      </div>
+    </div>
+
+    <!-- TIER BAR -->
+    <div class="vt-bar-row">
+      <div class="vt-seg" id="vt-s1"></div>
+      <div class="vt-seg" id="vt-s2"></div>
+      <div class="vt-seg" id="vt-s3"></div>
+      <div class="vt-seg" id="vt-s4"></div>
+      <div class="vt-seg" id="vt-s5"></div>
+    </div>
+    <div class="vt-seg-labels">
+      <div class="vt-seg-label" id="vt-sl1">V1<br>—</div>
+      <div class="vt-seg-label" id="vt-sl2">V2<br>5</div>
+      <div class="vt-seg-label" id="vt-sl3">V3<br>10</div>
+      <div class="vt-seg-label" id="vt-sl4">V4<br>30</div>
+      <div class="vt-seg-label" id="vt-sl5" style="font-size:.38rem">V5<br>50</div>
+    </div>
+
+    <!-- DAMAGE INPUT + SPEND -->
+    <div class="vt-dmg-row">
+      <div class="vt-input-block">
+        <div class="vt-input-label">take damage (before halving)</div>
+        <div class="vt-input-row">
+          <input class="vt-num" id="vt-dmg-in" type="number" min="0" placeholder="dmg">
+          <button class="vt-btn take" onclick="vt.takeDamage()">Take</button>
+        </div>
+      </div>
+      <div class="vt-input-block">
+        <div class="vt-input-label">spend points manually</div>
+        <div class="vt-input-row">
+          <input class="vt-num" id="vt-spend-in" type="number" min="0" placeholder="pts">
+          <button class="vt-btn spend" onclick="vt.spendPoints()">Spend</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div class="vt-log" id="vt-log">no actions yet · heartbeat trickle always active</div>
+
+    <!-- OVERCHARGE WARNING -->
+    <div class="vt-overcharge" id="vt-overcharge">
+      ⚡ OVERCHARGE ACTIVE — incoming damage reflects at 1.5× back at attacker
+    </div>
+
+    <!-- ABILITY QUICK-USE -->
+    <div class="vt-ability-grid" id="vt-ability-grid">
+      <div class="vt-ability-row" id="vt-row-1">
+        <span class="vt-ab-tier" style="color:var(--volt1)">Volt 1</span>
+        <span class="vt-ab-cost">always</span>
+        <span class="vt-ab-desc">Advantage on one STR roll this combat (heartbeat)</span>
+        <button class="vt-ab-use" onclick="vt.useAbility(1)">Active</button>
+      </div>
+      <div class="vt-ability-row" id="vt-row-2">
+        <span class="vt-ab-tier" style="color:var(--volt2)">Volt 2</span>
+        <span class="vt-ab-cost">5 pts</span>
+        <span class="vt-ab-desc">On hit: stun 1 turn + d8+STR shock damage</span>
+        <button class="vt-ab-use" onclick="vt.useAbility(2)">Use (−5)</button>
+      </div>
+      <div class="vt-ability-row" id="vt-row-3">
+        <span class="vt-ab-tier" style="color:var(--volt3)">Volt 3</span>
+        <span class="vt-ab-cost">10+ pts</span>
+        <span class="vt-ab-desc">15ft burst: same as Lv2 on all in range · +5ft per extra 5 pts</span>
+        <button class="vt-ab-use" onclick="vt.useAbility(3)">Use (−10)</button>
+      </div>
+      <div class="vt-ability-row" id="vt-row-4">
+        <span class="vt-ab-tier" style="color:#5dcfdf">Volt 4</span>
+        <span class="vt-ab-cost">30 pts</span>
+        <span class="vt-ab-desc">Full body hazard · touch or electrified surface: 3d8+STR</span>
+        <button class="vt-ab-use" onclick="vt.useAbility(4)">Use (−30)</button>
+      </div>
+      <div class="vt-ability-row" id="vt-row-5">
+        <span class="vt-ab-tier" style="color:var(--gold)">Volt 5</span>
+        <span class="vt-ab-cost">50 pts</span>
+        <span class="vt-ab-desc">Nail arc lightning · 5d8 + shock (15+ to clear/turn) + electrified (2dmg/turn)</span>
+        <button class="vt-ab-use" onclick="vt.useAbility(5)">Use (−50)</button>
+      </div>
+    </div>
+
+    <!-- CONDITIONS -->
+    <div class="vt-status-section">
+      <div class="vt-status-label">target conditions</div>
+      <div class="vt-conditions">
+        <div class="vt-cond" id="vt-cond-shock">
+          <div class="vt-cond-name"><div class="vt-cond-dot"></div>Shocked</div>
+          <div class="vt-cond-desc">Roll d20 each turn · 15+ clears · else skip turn · stacks with electrified</div>
+          <div class="vt-cond-btns">
+            <button class="vt-cond-btn" onclick="vt.rollShock()">Roll Clear (d20)</button>
+            <button class="vt-cond-btn clear" onclick="vt.clearCond('shock')">Clear</button>
+          </div>
+          <div style="font-family:var(--font-display);font-size:.5rem;color:var(--text-dim);min-height:.7rem;" id="vt-shock-result"></div>
+        </div>
+        <div class="vt-cond" id="vt-cond-electrified">
+          <div class="vt-cond-name"><div class="vt-cond-dot"></div>Electrified</div>
+          <div class="vt-cond-desc">Take 2 damage each turn while shocked · clears when shock clears</div>
+          <div class="vt-cond-btns">
+            <button class="vt-cond-btn" onclick="vt.applyElectrified()">Apply Turn Dmg</button>
+            <button class="vt-cond-btn clear" onclick="vt.clearCond('electrified')">Clear</button>
+          </div>
+          <div style="font-family:var(--font-display);font-size:.5rem;color:var(--gold);min-height:.7rem;" id="vt-elec-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:.6rem;">
+      <button class="vt-btn reset-s" onclick="vt.reset()">Reset All</button>
+    </div>
+  </div>
+
   <div class="card">
     <div class="sec-label">Lore</div>
     <div class="lore-block">
@@ -159,6 +617,206 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
   <div class="footer">stats update on level up only<span></span>post-collapse 2004<span></span>embodiment egg</div>
 </div>
 <script>
+// ═══════════════════════════════════════
+// VOLT TRACKER
+// ═══════════════════════════════════════
+const vt = (() => {
+  const STR_MOD  = 4;
+  const TIERS    = [
+    { v:1, threshold:0,  cost:0,  label:'Volt 1', sub:'heartbeat always active' },
+    { v:2, threshold:5,  cost:5,  label:'Volt 2', sub:'5+ pts stored' },
+    { v:3, threshold:10, cost:10, label:'Volt 3', sub:'10+ pts stored' },
+    { v:4, threshold:30, cost:30, label:'Volt 4', sub:'30+ pts stored' },
+    { v:5, threshold:50, cost:50, label:'Volt 5', sub:'50+ pts stored' },
+  ];
+  const STORE_KEY = 'estella_volt_v1';
+
+  let stored = 0;
+  let conds  = { shock: false, electrified: false };
+
+  function getTier() {
+    let t = TIERS[0];
+    for (const tier of TIERS) { if (stored >= tier.threshold) t = tier; }
+    return t;
+  }
+
+  function save() {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ stored, conds }));
+  }
+  function load() {
+    try {
+      const d = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      stored = d.stored || 0;
+      conds  = d.conds  || { shock: false, electrified: false };
+    } catch(e) {}
+  }
+
+  function log(html) {
+    document.getElementById('vt-log').innerHTML = html;
+  }
+
+  function rollDice(sides) { return Math.floor(Math.random() * sides) + 1; }
+
+  function render() {
+    const tier = getTier();
+
+    // points display
+    const ptsEl = document.getElementById('vt-pts');
+    ptsEl.textContent = stored;
+    ptsEl.className = 'vt-pts-num' +
+      (stored >= 50 ? ' v5' : stored >= 30 ? ' v4' : stored < 5 ? ' low' : '');
+
+    // tier badge
+    const tnEl  = document.getElementById('vt-tier-name');
+    const tsEl  = document.getElementById('vt-tier-sub');
+    tnEl.textContent = tier.label;
+    tsEl.textContent = tier.sub;
+    const colors = ['var(--text-dim)','var(--volt1)','var(--volt2)','var(--volt3)','#5dcfdf','var(--gold)'];
+    tnEl.style.color = colors[tier.v];
+    tnEl.style.textShadow = tier.v >= 5 ? '0 0 12px rgba(255,229,122,.5)' :
+                             tier.v >= 2 ? '0 0 10px rgba(0,229,255,.4)' : 'none';
+
+    // bar segments
+    for (let i = 1; i <= 5; i++) {
+      const seg = document.getElementById('vt-s' + i);
+      const lbl = document.getElementById('vt-sl' + i);
+      const on  = i <= tier.v;
+      seg.className = 'vt-seg' + (on ? ' active' + (i===5?' s5':i===4?' s4':'') : '');
+      lbl.className = 'vt-seg-label' + (on ? ' active' + (i===5?' s5':'') : '');
+    }
+
+    // overcharge
+    const oc = document.getElementById('vt-overcharge');
+    oc.classList.toggle('visible', stored >= 50);
+
+    // ability rows
+    for (let i = 1; i <= 5; i++) {
+      const row = document.getElementById('vt-row-' + i);
+      const t   = TIERS[i - 1];
+      const canUse = i === 1 || stored >= t.threshold;
+      row.classList.toggle('locked',   !canUse);
+      row.classList.toggle('unlocked', canUse && tier.v !== i);
+      row.classList.toggle('active-volt', tier.v === i);
+      const useBtn = row.querySelector('.vt-ab-use');
+      if (useBtn) useBtn.disabled = !canUse || i === 1;
+    }
+
+    // conditions
+    ['shock','electrified'].forEach(c => {
+      const el = document.getElementById('vt-cond-' + c);
+      el.classList.toggle('active-cond', conds[c]);
+    });
+  }
+
+  function takeDamage() {
+    const raw = parseInt(document.getElementById('vt-dmg-in').value);
+    if (isNaN(raw) || raw <= 0) return;
+    const absorbed = Math.floor(raw / 2);
+    const actual   = raw - absorbed;
+    stored += absorbed;
+    document.getElementById('vt-dmg-in').value = '';
+    log(`<span class="warn">Took ${raw} dmg → ${actual} actual damage · <span class="gain">+${absorbed} pts stored</span> → total: <b>${stored}</b></span>`);
+    save(); render();
+  }
+
+  function spendPoints() {
+    const amt = parseInt(document.getElementById('vt-spend-in').value);
+    if (isNaN(amt) || amt <= 0) return;
+    if (amt > stored) { log(`<span class="warn">Not enough points — have ${stored}, need ${amt}</span>`); return; }
+    stored -= amt;
+    document.getElementById('vt-spend-in').value = '';
+    log(`<span class="spend-c">Spent ${amt} pts → <b>${stored}</b> remaining</span>`);
+    save(); render();
+  }
+
+  function useAbility(v) {
+    const t = TIERS[v - 1];
+    if (stored < t.threshold) { log(`<span class="warn">Need ${t.threshold} pts for Volt ${v}, have ${stored}</span>`); return; }
+
+    let detail = '';
+    if (v === 2) {
+      const d8 = rollDice(8);
+      const total = d8 + STR_MOD;
+      detail = `d8(${d8})+STR(${STR_MOD}) = <b>${total}</b> shock dmg · target stunned 1 turn`;
+      conds.shock = true; conds.electrified = false;
+    } else if (v === 3) {
+      const d8 = rollDice(8);
+      const total = d8 + STR_MOD;
+      const extra = Math.max(0, stored - 10);
+      const bonus5s = Math.floor(extra / 5);
+      const radius = 15 + bonus5s * 5;
+      detail = `${radius}ft burst · d8(${d8})+STR = <b>${total}</b> · all in range stunned`;
+      conds.shock = true; conds.electrified = false;
+    } else if (v === 4) {
+      const rolls = [rollDice(8), rollDice(8), rollDice(8)];
+      const total = rolls.reduce((a,b)=>a+b,0) + STR_MOD;
+      detail = `3d8(${rolls.join('+')})+STR = <b>${total}</b> · full body hazard active · surfaces electrified`;
+      conds.electrified = true;
+    } else if (v === 5) {
+      const rolls = [rollDice(8),rollDice(8),rollDice(8),rollDice(8),rollDice(8)];
+      const total = rolls.reduce((a,b)=>a+b,0);
+      detail = `5d8(${rolls.join('+')}) = <b>${total}</b> dmg · shock + electrified applied to target`;
+      conds.shock = true; conds.electrified = true;
+    }
+
+    stored -= t.cost;
+    log(`<span class="spend-c">Used Volt ${v} (−${t.cost} pts) · ${detail} · <b>${stored}</b> pts remain</span>`);
+    save(); render();
+  }
+
+  function rollShock() {
+    if (!conds.shock) { log('Target is not shocked'); return; }
+    const roll = rollDice(20);
+    const clear = roll >= 15;
+    const el = document.getElementById('vt-shock-result');
+    if (clear) {
+      conds.shock = false;
+      el.innerHTML = `<span style="color:var(--cyan2)">d20(${roll}) ≥ 15 — shock cleared</span>`;
+      log(`Shock cleared on d20(${roll})`);
+    } else {
+      el.innerHTML = `<span style="color:var(--gold)">d20(${roll}) < 15 — stunned, skip turn</span>`;
+      log(`Shock persists — d20(${roll}), turn skipped`);
+    }
+    save(); render();
+  }
+
+  function applyElectrified() {
+    if (!conds.electrified) { log('Target is not electrified'); return; }
+    const dmg = conds.shock ? 2 : 0;
+    const el = document.getElementById('vt-elec-result');
+    if (conds.shock) {
+      el.innerHTML = `<span style="color:var(--gold)">+2 dmg this turn (shocked + electrified)</span>`;
+      log('Electrified turn damage: <b>2</b>');
+    } else {
+      el.innerHTML = `<span style="color:var(--text-dim)">no dmg — not shocked</span>`;
+      log('Electrified but not shocked — no turn damage');
+    }
+  }
+
+  function clearCond(c) {
+    conds[c] = false;
+    if (c === 'shock') {
+      document.getElementById('vt-shock-result').textContent = '';
+      conds.electrified = false;
+    }
+    if (c === 'electrified') document.getElementById('vt-elec-result').textContent = '';
+    log(`${c} condition cleared`);
+    save(); render();
+  }
+
+  function reset() {
+    stored = 0;
+    conds  = { shock: false, electrified: false };
+    document.getElementById('vt-shock-result').textContent = '';
+    document.getElementById('vt-elec-result').textContent  = '';
+    log('reset · heartbeat trickle always active');
+    save(); render();
+  }
+
+  load(); render();
+  return { takeDamage, spendPoints, useAbility, rollShock, applyElectrified, clearCond, reset };
+})();
+
 // React Bits-inspired: Electric arc / lightning canvas
 const canvas = document.getElementById('arc-canvas');
 const ctx = canvas.getContext('2d');
