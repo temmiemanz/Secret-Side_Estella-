@@ -525,7 +525,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 
     <!-- OVERCHARGE WARNING -->
     <div class="vt-overcharge" id="vt-overcharge">
-      ⚡ OVERCHARGE ACTIVE — incoming damage reflects at 1.5× back at attacker
+      ⚡ OVERCHARGE ACTIVE — storage full at 50 · incoming damage now deals ×1.5 to Estella instead of storing
     </div>
 
     <!-- ABILITY QUICK-USE -->
@@ -711,11 +711,17 @@ const vt = (() => {
   function takeDamage() {
     const raw = parseInt(document.getElementById('vt-dmg-in').value);
     if (isNaN(raw) || raw <= 0) return;
-    const absorbed = Math.floor(raw / 2);
-    const actual   = raw - absorbed;
-    stored += absorbed;
     document.getElementById('vt-dmg-in').value = '';
-    log(`<span class="warn">Took ${raw} dmg → ${actual} actual damage · <span class="gain">+${absorbed} pts stored</span> → total: <b>${stored}</b></span>`);
+    if (stored >= 50) {
+      const actual = Math.ceil(raw * 1.5);
+      log(`<span class="warn">⚡ OVERCHARGE — storage full · ${raw} dmg ×1.5 = <b>${actual}</b> actual taken · no pts gained</span>`);
+    } else {
+      const absorbed = Math.floor(raw / 2);
+      const actual   = raw - absorbed;
+      stored = Math.min(50, stored + absorbed);
+      const capped = stored >= 50;
+      log(`<span class="warn">Took ${raw} dmg → ${actual} actual · <span class="gain">+${absorbed} pts</span> → <b>${stored}</b>${capped ? ' · <span style="color:var(--gold)">OVERCHARGE — cap reached</span>' : ''}</span>`);
+    }
     save(); render();
   }
 
