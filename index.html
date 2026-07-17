@@ -1135,14 +1135,9 @@ body { background: #0c0905; min-height: 100vh; }
             <span class="cw-volt-num" id="cwNum">0</span>
           </div>
 
-          <!-- DAMAGE INPUT -->
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            <div class="cw-dmg-row">
-              <span class="cw-dmg-label">Damage taken</span>
-              <input class="cw-dmg-input" id="cwDmgInput" type="number" min="0" placeholder="0">
-              <button class="cw-dmg-btn" onclick="cwTakeDamage()">Take</button>
-            </div>
-            <span class="cw-half-note">Half goes to HP loss · Half converts to Volts</span>
+          <!-- AUTO VOLT NOTE -->
+          <div style="font-size:10px;color:var(--muted);font-style:italic;letter-spacing:0.04em;">
+            Volts charge automatically when HP drops. Estella is twice as durable as other characters.
           </div>
 
           <div class="cw-divider"></div>
@@ -2144,23 +2139,25 @@ function cwUpdate() {
   cwSave();
 }
 
-function cwTakeDamage() {
-  var dmg = parseInt(document.getElementById('cwDmgInput').value) || 0;
-  if (dmg <= 0) return;
-  var voltGain = Math.floor(dmg / 2);
-  var hpLoss   = Math.ceil(dmg / 2);
-  cwVolts = Math.min(CW_MAX, cwVolts + voltGain);
-  // Apply HP loss
+// HP watcher — detect drops and convert to Volts
+var cwLastHp = null;
+setInterval(function() {
   var hpEl = document.getElementById('currentHp');
-  if (hpEl) {
-    var cur = parseInt(hpEl.value) || 0;
-    hpEl.value = Math.max(0, cur - hpLoss);
-    save();
+  if (!hpEl) return;
+  var hp = parseInt(hpEl.value);
+  if (isNaN(hp)) return;
+  if (cwLastHp === null) { cwLastHp = hp; return; }
+  if (hp < cwLastHp) {
+    var drop    = cwLastHp - hp;
+    var gained  = Math.min(drop, CW_MAX - cwVolts);
+    if (gained > 0) {
+      cwVolts += gained;
+      cwUpdate();
+      showToast(gained, cwVolts, 'Charge +' + gained + 'V — ' + cwVolts + 'V total');
+    }
   }
-  document.getElementById('cwDmgInput').value = '';
-  cwUpdate();
-  showToast(voltGain, voltGain, 'Charge +'+ voltGain +' V (HP -'+ hpLoss +')');
-}
+  cwLastHp = hp;
+}, 500);
 
 function cwSpend(cost) {
   if (cwVolts < cost) return;
@@ -2203,8 +2200,6 @@ function cwLoad() {
 
 document.addEventListener('DOMContentLoaded', function() {
   cwLoad();
-  var inp = document.getElementById('cwDmgInput');
-  if (inp) inp.addEventListener('keydown', function(e) { if (e.key==='Enter') cwTakeDamage(); });
 });
 
 // ── ESTELLA — HEARTBEAT PULSE ──
