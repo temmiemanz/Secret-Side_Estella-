@@ -690,7 +690,7 @@ body {
 }
 #boltCanvas {
   position: fixed; inset: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: 0; opacity: 0;
+  pointer-events: none; z-index: 0;
 }
 .page { position: relative; z-index: 1; }
 
@@ -1306,27 +1306,22 @@ function load() {
   if (!data) { data = {}; }
 
   const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
-  set('charName',    data.charName);
-  set('playerName',  data.playerName);
-  set('abilityName', data.abilityName);
-  set('currentHp',   data.currentHp);
-  set('maxHp',       data.maxHp);
-  set('levelVal',    data.level);
-  set('acVal',       data.ac);
-  set('strVal',      data.str ?? 10);
-  set('mndVal',      data.mnd ?? 10);
-  set('solVal',      data.sol ?? 10);
-  set('defVal',      data.def ?? 10);
-  set('conditionsText', data.conditions);
-
-  if (data.powerCat) {
-    const el = document.getElementById('powerCat');
-    [...el.options].forEach(o => { if (o.value === data.powerCat) o.selected = true; });
-  }
-  if (data.powerType) {
-    const el = document.getElementById('powerType');
-    [...el.options].forEach(o => { if (o.value === data.powerType) o.selected = true; });
-  }
+  set('charName',    CHAR_DEFAULTS.name);
+  set('playerName',  CHAR_DEFAULTS.player);
+  set('abilityName', CHAR_DEFAULTS.abilityName);
+  set('strVal',      CHAR_DEFAULTS.str);
+  set('mndVal',      CHAR_DEFAULTS.mnd);
+  set('solVal',      CHAR_DEFAULTS.sol);
+  set('defVal',      CHAR_DEFAULTS.def);
+  set('levelVal',    CHAR_DEFAULTS.level);
+  const cat = document.getElementById('powerCat');
+  const typ = document.getElementById('powerType');
+  if (cat) [...cat.options].forEach(o => { o.selected = o.value === CHAR_DEFAULTS.powerCat; });
+  if (typ) [...typ.options].forEach(o => { o.selected = o.value === CHAR_DEFAULTS.powerType; });
+  set('currentHp',      data?.currentHp ?? CHAR_DEFAULTS.hp);
+  set('maxHp',          data?.hpMax     ?? CHAR_DEFAULTS.hpMax);
+  set('acVal',          data?.ac);
+  set('conditionsText', data?.conditions);
 
   if (data.profs) {
     Object.entries(data.profs).forEach(([sk, val]) => {
@@ -2055,7 +2050,8 @@ document.querySelectorAll('.locked-field').forEach(el => {
 document.querySelectorAll('.prof-val').forEach(el => {
   el.addEventListener('input', () => { refreshZeroHidden(); save(); });
 });
-// ── ESTELLA — ELECTRIC STORM ──
+// ── ESTELLA — PURE ELECTRICITY ──
+// Constant crackling arcs between random points, plasma glow, always alive
 (function() {
   var bg   = document.getElementById('stormBg');
   var bolt = document.getElementById('boltCanvas');
@@ -2072,54 +2068,67 @@ document.querySelectorAll('.prof-val').forEach(el => {
   resize();
   window.addEventListener('resize', resize);
 
-  function drawBg() {
-    bc.clearRect(0,0,W,H);
-    // Deep purple-black gradient
-    var g = bc.createLinearGradient(0,0,0,H);
-    g.addColorStop(0,   '#03020a');
-    g.addColorStop(0.4, '#07060f');
-    g.addColorStop(1,   '#0a0818');
-    bc.fillStyle = g;
-    bc.fillRect(0,0,W,H);
-    // Heavy cloud mass top
-    var cg = bc.createLinearGradient(0,0,0,H*0.55);
-    cg.addColorStop(0,   'rgba(8,6,2,0.85)');
-    cg.addColorStop(0.6, 'rgba(5,4,1,0.3)');
-    cg.addColorStop(1,   'transparent');
-    bc.fillStyle = cg;
-    bc.fillRect(0,0,W,H);
-    // Horizon glow
-    var hg = bc.createRadialGradient(W*0.5,H*0.9,0, W*0.5,H*0.9, W*0.7);
-    hg.addColorStop(0,   'rgba(245,208,0,0.03)');
-    hg.addColorStop(1,   'transparent');
-    bc.fillStyle = hg;
-    bc.fillRect(0,0,W,H);
+  // Static background — deep black with plasma glow nodes
+  var glowNodes = [];
+  function initNodes() {
+    glowNodes = [];
+    for (var i=0;i<6;i++) {
+      glowNodes.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: 80+Math.random()*200,
+        a: 0.015+Math.random()*0.025,
+        phase: Math.random()*Math.PI*2,
+        speed: 0.003+Math.random()*0.005
+      });
+    }
   }
 
-  // Iterative midpoint displacement
+  function drawBg() {
+    bc.clearRect(0,0,W,H);
+    bc.fillStyle='#07060f';
+    bc.fillRect(0,0,W,H);
+    if (!glowNodes || !glowNodes.length) return;
+    // Plasma glow nodes — always pulsing
+    glowNodes.forEach(function(n) {
+      n.phase += n.speed;
+      var alpha = n.a * (0.5 + 0.5*Math.sin(n.phase));
+      var g = bc.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+      g.addColorStop(0,   'rgba(245,208,0,'+alpha+')');
+      g.addColorStop(0.4, 'rgba(200,160,0,'+(alpha*0.4)+')');
+      g.addColorStop(1,   'transparent');
+      bc.fillStyle=g;
+      bc.fillRect(n.x-n.r,n.y-n.r,n.r*2,n.r*2);
+    });
+  }
+
+  // Iterative midpoint displacement — no recursion
   function makeBolt(x1,y1,x2,y2,iters) {
-    var pts = [{x:x1,y:y1},{x:x2,y:y2}];
-    var spread = (Math.abs(x2-x1)*0.6 + Math.abs(y2-y1)*0.25);
+    var pts=[{x:x1,y:y1},{x:x2,y:y2}];
+    var spread=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))*0.35;
     for (var i=0;i<iters;i++) {
       var nxt=[];
       for (var j=0;j<pts.length-1;j++) {
         nxt.push(pts[j]);
+        var angle=Math.atan2(pts[j+1].y-pts[j].y,pts[j+1].x-pts[j].x)+Math.PI/2;
+        var disp=(Math.random()-.5)*spread;
         nxt.push({
-          x:(pts[j].x+pts[j+1].x)/2+(Math.random()-.5)*spread,
-          y:(pts[j].y+pts[j+1].y)/2+(Math.random()-.5)*spread*0.25
+          x:(pts[j].x+pts[j+1].x)/2+Math.cos(angle)*disp,
+          y:(pts[j].y+pts[j+1].y)/2+Math.sin(angle)*disp
         });
       }
       nxt.push(pts[pts.length-1]);
-      pts=nxt; spread*=0.52;
+      pts=nxt; spread*=0.55;
     }
     return pts;
   }
 
-  function strokeBolt(pts,alpha,lw,blur) {
+  function strokeArc(pts,alpha,lw,blur) {
+    if (pts.length < 2) return;
     lc.beginPath();
     lc.moveTo(pts[0].x,pts[0].y);
     for (var i=1;i<pts.length;i++) lc.lineTo(pts[i].x,pts[i].y);
-    lc.strokeStyle='rgba(255,238,60,'+alpha+')';
+    lc.strokeStyle='rgba(255,238,40,'+alpha+')';
     lc.lineWidth=lw;
     lc.shadowColor='#f5d000';
     lc.shadowBlur=blur;
@@ -2127,57 +2136,89 @@ document.querySelectorAll('.prof-val').forEach(el => {
     lc.shadowBlur=0;
   }
 
-  function flash() {
+  // Arc endpoints — pick from edge or random interior
+  function randPoint() {
+    var edge=Math.floor(Math.random()*4);
+    if (edge===0) return {x:Math.random()*W, y:0};
+    if (edge===1) return {x:W, y:Math.random()*H};
+    if (edge===2) return {x:Math.random()*W, y:H};
+    return {x:0, y:Math.random()*H};
+  }
+
+  // Active arcs
+  var arcs = [];
+
+  function spawnArc() {
+    var p1, p2;
+    // Mix of: edge-to-edge, edge-to-interior, node-to-node
+    var type = Math.random();
+    if (type < 0.4) {
+      // Edge to edge
+      p1 = randPoint();
+      p2 = randPoint();
+    } else if (type < 0.75) {
+      // Edge to interior
+      p1 = randPoint();
+      p2 = {x:W*(0.1+Math.random()*0.8), y:H*(0.1+Math.random()*0.8)};
+    } else {
+      // Node to node (between plasma glow centers)
+      if (!glowNodes.length) { p1=randPoint(); p2=randPoint(); } else { var n1=glowNodes[Math.floor(Math.random()*glowNodes.length)];
+      var n2=glowNodes[Math.floor(Math.random()*glowNodes.length)]; }
+      p1={x:n1.x+(Math.random()-.5)*40, y:n1.y+(Math.random()-.5)*40};
+      p2={x:n2.x+(Math.random()-.5)*40, y:n2.y+(Math.random()-.5)*40};
+    }
+    var pts = makeBolt(p1.x,p1.y,p2.x,p2.y,6);
+    arcs.push({pts:pts, life:0, maxLife:4+Math.random()*8, alpha:0.7+Math.random()*0.3});
+  }
+
+  var t=0;
+  function frame() {
+    t++;
+    // Redraw background every few frames for pulse effect
+    if (t%2===0) drawBg();
+
     lc.clearRect(0,0,W,H);
     bolt.style.opacity='1';
-    var x   = W*(0.1+Math.random()*0.8);
-    var ex  = x+(Math.random()-.5)*120;
-    var ey  = H*(0.3+Math.random()*0.4);
-    var pts = makeBolt(x,-20,ex,ey,8);
 
-    // Outer glow
-    strokeBolt(pts,0.08,10,60);
-    // Mid
-    strokeBolt(pts,0.3, 3, 25);
-    // Core bright
-    strokeBolt(pts,1.0, 1, 10);
+    // Spawn new arcs
+    if (Math.random()<0.35) spawnArc();
+    if (arcs.length < 3 && Math.random()<0.5) spawnArc();
 
-    // Branch
-    if (Math.random()<0.6) {
-      var mi = Math.floor(pts.length*(0.25+Math.random()*0.5));
-      var bp = makeBolt(pts[mi].x,pts[mi].y,
-        pts[mi].x+(Math.random()-.5)*150,
-        pts[mi].y+50+Math.random()*100, 5);
-      strokeBolt(bp,0.6,0.7,6);
-    }
+    // Draw and age arcs
+    arcs = arcs.filter(function(a) {
+      a.life++;
+      var progress = a.life/a.maxLife;
+      var fade = progress < 0.3
+        ? progress/0.3                    // fade in
+        : 1-(progress-0.3)/0.7;          // fade out
+      var alpha = a.alpha * fade;
+      if (alpha > 0.01) {
+        // Outer glow
+        strokeArc(a.pts, alpha*0.12, 8, 50);
+        // Inner glow
+        strokeArc(a.pts, alpha*0.4,  2.5, 20);
+        // Core
+        strokeArc(a.pts, alpha*0.95, 0.8, 8);
+        // Occasional sub-branch mid-arc
+        if (a.life===2 && Math.random()<0.5) {
+          var mi=Math.floor(a.pts.length*(0.3+Math.random()*0.4));
+          var bp=makeBolt(a.pts[mi].x,a.pts[mi].y,
+            a.pts[mi].x+(Math.random()-.5)*100,
+            a.pts[mi].y+(Math.random()-.5)*100,4);
+          strokeArc(bp,alpha*0.5,0.6,6);
+        }
+      }
+      return a.life < a.maxLife;
+    });
 
-    // Flash the background
-    var fg = bc.createRadialGradient(x,0,0,x,0,W*0.65);
-    fg.addColorStop(0,  'rgba(245,208,0,0.09)');
-    fg.addColorStop(0.3,'rgba(245,208,0,0.03)');
-    fg.addColorStop(1,  'transparent');
-    bc.fillStyle=fg;
-    bc.fillRect(0,0,W,H);
-
-    setTimeout(function() {
-      lc.clearRect(0,0,W,H);
-      bolt.style.opacity='0';
-      setTimeout(drawBg,120);
-    }, 55+Math.random()*70);
+    requestAnimationFrame(frame);
   }
 
-  function schedule() {
-    setTimeout(function(){ flash(); schedule(); }, 3500+Math.random()*9000);
-  }
-  function scheduleDouble() {
-    setTimeout(function(){
-      flash();
-      setTimeout(flash, 100+Math.random()*100);
-      scheduleDouble();
-    }, 14000+Math.random()*18000);
-  }
-  schedule();
-  scheduleDouble();
+  initNodes();
+  drawBg();
+  // Spawn a few immediately so it's not empty
+  for (var i=0;i<3;i++) spawnArc();
+  frame();
 })();
 
 </script>
