@@ -12,16 +12,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;600&display=swap');
 
 :root {
-  --bg:           #07060f;
-  --panel:        #0d0c1a;
-  --panel2:       #111024;
-  --border:       #1a1830;
-  --border2:      #262445;
+  --bg:           #0c0905;
+  --panel:        #131008;
+  --panel2:       #18140a;
+  --border:       #1e1a0e;
+  --border2:      #2a2416;
   --accent:       #f5d000;
-  --text:         #e8e4cc;
-  --muted:        #3d3b60;
-  --dim:          #6b688a;
-  --input:        #06050e;
+  --text:         #e8dfc0;
+  --muted:        #4a4020;
+  --dim:          #7a6e40;
+  --input:        #0a0804;
   --red:          #c03030;
   --green:        #2a8a4a;
   --shadow-sm:    0 2px 12px rgba(0,0,0,0.5);
@@ -675,238 +675,138 @@ body.editing .prof-label { display: inline; font-size: 9px; color: var(--muted);
 .ds-roll:hover { background: var(--red); color: #fff; }
 
 /* ══════════════════════════════════════════
-   ESTELLA — ELECTRIC STORM THEME
+   ESTELLA — INTERNAL ELECTRIC THEME
    ══════════════════════════════════════════ */
 
-body {
-  background: #07060f;
-  min-height: 100vh;
-}
+body { background: #0c0905; min-height: 100vh; }
 
-/* Storm background layers */
-#stormBg {
-  position: fixed; inset: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-}
-#boltCanvas {
+#pulseCanvas {
   position: fixed; inset: 0; width: 100%; height: 100%;
   pointer-events: none; z-index: 0;
 }
 .page { position: relative; z-index: 1; }
 
-/* Cards — deep purple-black with yellow accent border */
 .card {
-  background: rgba(13,12,26,0.97);
-  border: 1px solid rgba(245,208,0,0.12);
-  box-shadow: 0 0 0 0 transparent, 0 4px 24px rgba(0,0,0,0.8);
-  transition: border-color 0.4s, box-shadow 0.4s;
+  background: rgba(19,16,8,0.96);
+  border: 1px solid rgba(245,208,0,0.1);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.7);
+  transition: border-color 0.3s;
 }
-.card:hover {
-  border-color: rgba(245,208,0,0.28);
-  box-shadow: 0 0 16px rgba(245,208,0,0.06), 0 4px 24px rgba(0,0,0,0.8);
-}
+.card:hover { border-color: rgba(245,208,0,0.22); }
+
 .card-title {
   font-family: var(--font-display);
-  font-size: 15px; font-weight: 700; letter-spacing: 0.22em;
-  color: var(--accent);
-  border-bottom: 1px solid rgba(245,208,0,0.15);
-  text-shadow: 0 0 12px rgba(245,208,0,0.5);
+  font-size: 15px; font-weight: 700; letter-spacing: 0.2em;
+  color: var(--accent); border-bottom-color: rgba(245,208,0,0.12);
+  text-shadow: 0 0 10px rgba(245,208,0,0.35);
 }
-.card-title::after { background: rgba(245,208,0,0.08); }
+.card-title::after { background: rgba(245,208,0,0.06); }
 
-/* Name — big angular yellow */
 .char-name-input {
   font-family: var(--font-display);
-  font-size: 36px; font-weight: 700; letter-spacing: 0.06em;
-  color: var(--accent);
-  text-shadow: 0 0 30px rgba(245,208,0,0.35), 0 0 60px rgba(245,208,0,0.1);
-}
-
-/* Field labels */
-.field-label { color: var(--muted); letter-spacing: 0.14em; }
-.plain-field { color: var(--text); }
-
-/* Power line */
-.power-field, .power-select { color: var(--dim); font-size: 12px; }
-.power-sep { color: var(--muted); }
-
-/* Stat columns */
-.stat-col {
-  background: rgba(9,8,20,0.98);
-  border: 1px solid rgba(245,208,0,0.1);
-  border-radius: var(--radius-lg);
-}
-.stat-header {
-  background: rgba(245,208,0,0.06);
-  border-bottom: 1px solid rgba(245,208,0,0.1);
-}
-.stat-name {
-  font-family: var(--font-display); font-size: 12px; font-weight: 700;
-  letter-spacing: 0.22em; color: var(--dim); text-transform: uppercase;
-}
-.stat-val {
-  font-family: var(--font-display); font-size: 28px; font-weight: 700;
+  font-size: 34px; font-weight: 700; letter-spacing: 0.06em;
   color: var(--text);
 }
-.stat-roll-line {
-  background: rgba(245,208,0,0.03);
-  border-bottom: 1px solid rgba(245,208,0,0.08);
-}
-.stat-roll-line:hover { background: rgba(245,208,0,0.07); cursor: pointer; }
-.stat-roll-text {
-  font-family: var(--font-display); font-size: 13px; font-weight: 600;
-  color: var(--accent); letter-spacing: 0.06em;
-  text-shadow: 0 0 8px rgba(245,208,0,0.4);
-}
 
-/* Skills */
-.skill-name {
-  font-family: var(--font-main); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.1em; color: var(--dim); text-transform: uppercase;
-}
+.field-label { color: var(--muted); letter-spacing: 0.12em; }
+.plain-field { color: var(--text); }
+.power-field, .power-select { color: var(--dim); font-size: 12px; }
+
+.stat-col { background: rgba(12,9,4,0.98); border-color: rgba(245,208,0,0.08); }
+.stat-header { background: rgba(245,208,0,0.05); border-bottom: 1px solid rgba(245,208,0,0.08); }
+.stat-name { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; color: var(--dim); }
+.stat-val { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text); }
+.stat-roll-line { background: rgba(245,208,0,0.025); border-bottom: 1px solid rgba(245,208,0,0.07); }
+.stat-roll-line:hover { background: rgba(245,208,0,0.06); cursor: pointer; }
+.stat-roll-text { font-family: var(--font-display); font-size: 13px; color: var(--accent); letter-spacing: 0.05em; text-shadow: 0 0 8px rgba(245,208,0,0.4); }
+
+.skill-name { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--dim); }
 .skill-badge {
   font-family: var(--font-display); font-size: 14px; font-weight: 700;
-  background: rgba(245,208,0,0.08);
-  border: 1px solid rgba(245,208,0,0.18);
-  color: var(--accent);
+  background: rgba(245,208,0,0.07); border: 1px solid rgba(245,208,0,0.16);
+  color: var(--accent); min-width: 40px;
   text-shadow: 0 0 6px rgba(245,208,0,0.3);
-  min-width: 40px;
 }
-.skill-row:hover { background: rgba(245,208,0,0.04); }
-.skill-row:hover .skill-badge {
-  border-color: rgba(245,208,0,0.5);
-  box-shadow: 0 0 10px rgba(245,208,0,0.15);
-}
+.skill-row:hover { background: rgba(245,208,0,0.03); }
+.skill-row:hover .skill-badge { border-color: rgba(245,208,0,0.45); box-shadow: 0 0 8px rgba(245,208,0,0.12); }
 
-/* Roll button */
-.roll-btn {
-  border-color: rgba(245,208,0,0.18); color: rgba(245,208,0,0.5);
-  font-family: var(--font-display); letter-spacing: 0.08em;
-}
-.roll-btn:hover {
-  border-color: var(--accent); color: var(--accent);
-  box-shadow: 0 0 8px rgba(245,208,0,0.2);
-}
+.roll-btn { border-color: rgba(245,208,0,0.15); color: rgba(245,208,0,0.45); font-family: var(--font-display); letter-spacing: 0.08em; }
+.roll-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.18); }
 
-/* HP */
-.hp-num { font-family: var(--font-display); font-size: 22px; color: var(--text); }
-.hp-slash { color: var(--muted); }
-.hp-label { color: var(--dim); letter-spacing: 0.14em; }
+.hp-num { font-family: var(--font-display); font-size: 20px; }
+.hp-label { color: var(--dim); letter-spacing: 0.12em; }
 .hp-ctrl-btn.heal { border-color: var(--green); color: var(--green); }
-.hp-ctrl-btn.dmg  { border-color: var(--red);   color: var(--red); }
+.hp-ctrl-btn.dmg  { border-color: var(--red); color: var(--red); }
 
-/* Level */
-.level-label { color: var(--dim); letter-spacing: 0.14em; }
-.level-val {
-  font-family: var(--font-display); font-size: 48px; font-weight: 700;
-  color: var(--accent);
-  text-shadow: 0 0 20px rgba(245,208,0,0.4);
-}
+.level-label { color: var(--dim); letter-spacing: 0.12em; }
+.level-val { font-family: var(--font-display); font-size: 46px; font-weight: 700; color: var(--accent); text-shadow: 0 0 18px rgba(245,208,0,0.4); }
 
-/* Initiative */
-.initiative-card {
-  border-color: rgba(245,208,0,0.18) !important;
-  background: rgba(13,12,26,0.97) !important;
-}
-.initiative-card:hover { box-shadow: 0 0 20px rgba(245,208,0,0.1) !important; }
-.init-modifier {
-  font-family: var(--font-display); font-size: 46px; font-weight: 700;
-  color: var(--accent);
-  text-shadow: 0 0 20px rgba(245,208,0,0.45);
-}
+.initiative-card { border-color: rgba(245,208,0,0.15) !important; }
+.init-modifier { font-family: var(--font-display); font-size: 44px; font-weight: 700; color: var(--accent); text-shadow: 0 0 16px rgba(245,208,0,0.4); }
+.ac-derived { font-family: var(--font-display); font-size: 44px; font-weight: 700; }
 
-/* AC */
-.ac-card { border-color: rgba(245,208,0,0.12) !important; }
-.ac-derived {
-  font-family: var(--font-display); font-size: 46px; font-weight: 700;
-  color: var(--text);
-}
+.edit-btn { border-color: rgba(245,208,0,0.15); color: var(--muted); }
+.edit-btn:hover, .edit-btn.active { border-color: var(--accent); color: var(--accent); }
 
-/* Edit button */
-.edit-btn { border-color: rgba(245,208,0,0.18); color: var(--muted); }
-.edit-btn:hover, .edit-btn.active { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.15); }
+.ab-tab { color: var(--muted); font-family: var(--font-display); font-size: 13px; letter-spacing: 0.12em; }
+.ab-tab.active { color: var(--accent); border-bottom-color: var(--accent); text-shadow: 0 0 8px rgba(245,208,0,0.3); }
+.ab-tab-bar { border-bottom-color: rgba(245,208,0,0.1); }
 
-/* Tabs */
-.ab-tab { color: var(--muted); font-family: var(--font-display); font-size: 13px; letter-spacing: 0.14em; }
-.ab-tab.active { color: var(--accent); border-bottom-color: var(--accent); text-shadow: 0 0 8px rgba(245,208,0,0.35); }
-.ab-tab-bar { border-bottom-color: rgba(245,208,0,0.12); }
-
-/* Actions */
-.action-row { border-color: rgba(245,208,0,0.08); background: rgba(9,8,20,0.95); }
+.action-row { border-color: rgba(245,208,0,0.07); background: rgba(12,9,4,0.95); }
 .action-row:hover { border-color: rgba(245,208,0,0.18); }
-.action-name-text { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.06em; color: var(--text); }
-.action-flavor { color: rgba(107,104,138,0.8); }
+.action-name-text { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.05em; color: var(--text); }
+.action-flavor { color: var(--muted); }
 .action-notes-text { color: var(--dim); }
-.action-roll-text { color: var(--accent); font-family: var(--font-display); text-shadow: 0 0 6px rgba(245,208,0,0.3); }
+.action-roll-text { color: var(--accent); text-shadow: 0 0 6px rgba(245,208,0,0.3); }
 .action-roll-btn:hover { border-color: var(--accent); color: var(--accent); }
-.actions-section-label { font-family: var(--font-display); letter-spacing: 0.18em; color: var(--muted); }
-.actions-divider { background: rgba(245,208,0,0.08); }
+.actions-section-label { font-family: var(--font-display); letter-spacing: 0.16em; }
+.actions-divider { background: rgba(245,208,0,0.07); }
 
-/* Inventory */
-.col-label { font-family: var(--font-display); letter-spacing: 0.14em; }
-.inv-row input { background: rgba(6,5,14,0.98); border-color: rgba(245,208,0,0.1); color: var(--text); }
-.inv-row input:focus { border-color: rgba(245,208,0,0.35); }
-.plain-textarea { background: rgba(6,5,14,0.98); border-color: rgba(245,208,0,0.1); }
-.plain-textarea:focus { border-color: rgba(245,208,0,0.3); }
-.add-btn { border-color: rgba(245,208,0,0.1); color: var(--muted); }
-.add-btn:hover { border-color: rgba(245,208,0,0.4); color: var(--accent); }
-.rm-btn { border-color: rgba(245,208,0,0.1); }
+.plain-textarea { background: rgba(10,8,4,0.98); border-color: rgba(245,208,0,0.08); }
+.plain-textarea:focus { border-color: rgba(245,208,0,0.28); }
+.inv-row input { background: rgba(10,8,4,0.98); border-color: rgba(245,208,0,0.08); }
+.inv-row input:focus { border-color: rgba(245,208,0,0.28); }
+.add-btn { border-color: rgba(245,208,0,0.08); }
+.add-btn:hover { border-color: rgba(245,208,0,0.35); color: var(--accent); }
 
-/* Notes */
-.notes-trigger {
-  background: var(--accent); color: #000;
-  font-family: var(--font-display); font-weight: 700; letter-spacing: 0.14em;
-  box-shadow: 0 0 20px rgba(245,208,0,0.3);
-}
-.notes-trigger:hover { box-shadow: 0 0 30px rgba(245,208,0,0.4); }
-.notes-sidebar { background: rgba(13,12,26,0.99); border-color: rgba(245,208,0,0.1); }
-.notes-sidebar-title { color: var(--accent); text-shadow: 0 0 8px rgba(245,208,0,0.35); }
-.notes-topbar { border-bottom-color: rgba(245,208,0,0.2); }
-.notes-editor { background: rgba(6,5,14,0.99); }
+.notes-trigger { background: var(--accent); color: #000; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.12em; box-shadow: 0 0 18px rgba(245,208,0,0.3); }
 
-/* Dice */
-#diceBtn {
-  background: rgba(13,12,26,0.97); border-color: rgba(245,208,0,0.2); color: var(--dim);
-  box-shadow: 0 0 0 transparent;
-}
-#diceBtn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px rgba(245,208,0,0.2); }
-#diceBtn.active { background: rgba(245,208,0,0.1); border-color: var(--accent); color: var(--accent); }
-#dicePanel { background: rgba(13,12,26,0.99); border-color: rgba(245,208,0,0.15); }
-.dice-die { background: rgba(9,8,20,0.98); border-color: rgba(245,208,0,0.12); color: var(--dim); }
-.dice-die:hover { border-color: var(--accent); color: var(--accent); }
-.dice-die.selected { border-color: var(--accent); background: rgba(245,208,0,0.08); color: var(--accent); }
-.dice-roll-btn { background: var(--accent); color: #000; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.1em; }
-.dice-reset-btn { border-color: rgba(245,208,0,0.15); color: var(--muted); }
+#diceBtn { background: rgba(19,16,8,0.97); border-color: rgba(245,208,0,0.15); color: var(--dim); }
+#diceBtn:hover { border-color: var(--accent); color: var(--accent); }
+#diceBtn.active { background: rgba(245,208,0,0.08); border-color: var(--accent); color: var(--accent); }
+#dicePanel { background: rgba(19,16,8,0.99); border-color: rgba(245,208,0,0.12); }
+.dice-die { background: var(--panel2); border-color: var(--border2); color: var(--dim); }
+.dice-die:hover, .dice-die.selected { border-color: var(--accent); color: var(--accent); }
+.dice-die.selected { background: rgba(245,208,0,0.07); }
+.dice-roll-btn { background: var(--accent); color: #000; font-family: var(--font-display); font-weight: 700; }
 
-/* Toast */
-.toast-item { background: rgba(13,12,26,0.98); border-color: rgba(245,208,0,0.15); }
-.toast-total { color: var(--accent); text-shadow: 0 0 8px rgba(245,208,0,0.3); }
-
-/* Death saves */
-#deathSaves { border-color: var(--red); background: rgba(160,30,30,0.08); }
-.ds-title { color: var(--red); font-family: var(--font-display); letter-spacing: 0.18em; }
+#deathSaves { border-color: var(--red); background: rgba(150,20,20,0.08); }
+.ds-title { color: var(--red); font-family: var(--font-display); letter-spacing: 0.16em; }
 .ds-roll { border-color: var(--red); color: var(--red); font-family: var(--font-display); }
 .ds-roll:hover { background: var(--red); color: #fff; }
 
-/* Image card */
-.img-placeholder { border-color: rgba(245,208,0,0.12); }
-.img-placeholder:hover { border-color: rgba(245,208,0,0.3); color: var(--accent); }
-
-/* Warning text */
-.page > div:first-child { color: rgba(107,104,138,0.5) !important; }
+/* EKG decoration line */
+.ekg-bar {
+  width: 100%; height: 28px; opacity: 0.18;
+  background: none; margin: -4px 0 2px;
+  position: relative; overflow: hidden;
+}
+.ekg-bar svg { position: absolute; top: 0; left: 0; width: 200%; height: 100%; }
+@keyframes ekg-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ekg-bar svg { animation: ekg-scroll 4s linear infinite; }
 
 /* Lore */
 .estella-lore { display: flex; flex-direction: column; gap: 14px; padding: 4px 2px 10px; }
-.estella-lore p { font-size: 13px; line-height: 1.9; color: var(--dim); font-weight: 400; }
+.estella-lore p { font-size: 13px; line-height: 1.9; color: var(--dim); }
 .estella-lore strong { color: var(--text); font-weight: 600; }
 .estella-lore em { color: var(--accent); font-style: normal; text-shadow: 0 0 6px rgba(245,208,0,0.2); }
+.estella-lore .age-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.2em; color: rgba(245,208,0,0.35); text-transform: uppercase; margin-bottom: -8px; }
 
 </style>
 </head>
 <body>
 
-<canvas id="stormBg"></canvas>
-<canvas id="boltCanvas"></canvas>
+<canvas id="pulseCanvas"></canvas>
 
 <div class="page">
 
@@ -922,6 +822,7 @@ body {
 
   <!-- HEADER -->
   <div class="card">
+    <div class="ekg-bar"><svg viewBox="0 0 800 28" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><polyline points="0,14 80,14 90,14 95,2 100,26 105,14 115,14 195,14 200,14 205,2 210,26 215,14 225,14 305,14 310,14 315,2 320,26 325,14 335,14 415,14 420,14 425,2 430,26 435,14 445,14 525,14 530,14 535,2 540,26 545,14 555,14 635,14 640,14 645,2 650,26 655,14 665,14 745,14 750,14 755,2 760,26 765,14 775,14 800,14" fill="none" stroke="#f5d000" stroke-width="1.5"/></svg></div>
     <div class="header-grid">
 
       <div style="display:flex;flex-direction:column;gap:10px;">
@@ -1177,11 +1078,14 @@ body {
     </div>
     <div class="lore-body" id="loreBody">
       <div class="estella-lore">
-        <p>Estella was born December 17th, one year into the apocalypse, to a family already struggling under the weight of a collapsing world. They gave her up to improve her odds — and didn't disclose the illnesses running through their bloodline, afraid it would land her somewhere worse. The Jones family took her in. They were stable, reasonably kind, and completely unable to close the distance that grew between her and their other children. <em>She never fit, and she never knew why.</em></p>
-        <p>The illnesses came quietly at first. Slower steps, more breaks, conversations that took longer to parse. She started working out obsessively to keep pace with everyone else, not knowing she was making some of it worse. By six, the guilt of being a burden had compounded into something she couldn't carry anymore. She ran.</p>
-        <p>She found Odette not long after — or Odette found her, depending on who's telling it. They became inseparable almost immediately. <strong>Estella never told her about any of it.</strong> Not the anemia, not the knees, not the back. She pushed herself to exhaustion every single day just to seem fine. She watched the cult take hold of Odette and couldn't figure out how to stop it. She watched her friend kill people and looked the other way until she couldn't anymore.</p>
-        <p>At 13, two cities away, she tried to end it. The gun jammed. She was furious — <em>couldn't even do that right</em> — and on her way back got jumped by scavengers who took everything except the will to go back. She bought a pistol and a shank and walked home. Found Odette. Said nothing.</p>
-        <p>Her heart started going wrong before 17. Palpitations. Sharp chest pain. All of it quiet, all of it hidden. Then at 18 Odette ran away, and Estella's reason to keep going ran with her. She searched for a month. When she found her, Odette was different — but Estella didn't care what had changed. She just needed her back. <strong>She still does. She just hasn't said it yet.</strong></p>
+        <div class="age-label">Ages 1–6</div>
+        <p>Born December 17th, one year into the apocalypse, into a family already buckling under the weight of a collapsing world. They put her up for adoption to give her a better shot — and didn't disclose the illnesses running through their bloodline, afraid it would cost her a good home. The Jones family took her in. Stable, reasonably kind, financially intact. <em>She never fit.</em> There was always a silent distance between her and their other children — nothing said, nothing done, just a gap that never closed. When her conditions started showing — slower, more breaks, conversations that took longer to parse — she started working out obsessively to keep pace. She didn't know she was making some of it worse. Burdened with the guilt of dragging everyone down, she ran at six.</p>
+
+        <div class="age-label">Ages 7–16</div>
+        <p>She found Odette almost immediately — or Odette found her. They became inseparable. <strong>Estella never told her about any of it.</strong> Not the anemia, not the knees, not the back. She pushed herself to exhaustion every day just to seem fine. She watched the cult take hold of Odette and couldn't figure out how to stop it. Watched her friend take lives and looked away until she couldn't anymore. At 13, two cities away, she tried to end it. The gun jammed. She was furious — <em>couldn't even do that right</em> — and on her way back got jumped by scavengers who took everything except the will to return. She bought a pistol and a shank and walked home. Found Odette. Said nothing. Just before 17, her heart started going wrong. Palpitations. Sharp chest pain. Quiet. Hidden.</p>
+
+        <div class="age-label">Ages 17–19</div>
+        <p>The same routine, every day: 6am, work out, scavenge, eat, scavenge, Odette, eat, work out, shower, sleep. Monotonous except for the flare-ups — heart, knees, hips, back, anemia, all of it untreated and ongoing. Then at 18 something shifted in Odette. A tension Estella could feel but couldn't name. She tried not to pry. Then Odette ran. <strong>Estella's whole world shattered.</strong> She searched for a month. When she found her, Odette was different. Estella didn't care. She just needed her back. <em>She still does. She just hasn't said it yet.</em></p>
       </div>
     </div>
   </div>
@@ -1212,10 +1116,10 @@ body {
 const CHAR_DEFAULTS = {
   name:        'Estella Jones',
   player:      'Lilly',
-  str:         16,
+  str:         14,
   mnd:         12,
-  sol:         11,
-  def:         10,
+  sol:         8,
+  def:         16,
   hp:          12,
   hpMax:       12,
   level:       1,
@@ -1322,6 +1226,7 @@ function load() {
   set('maxHp',          data?.hpMax     ?? CHAR_DEFAULTS.hpMax);
   set('acVal',          data?.ac);
   set('conditionsText', data?.conditions);
+
 
   if (data.profs) {
     Object.entries(data.profs).forEach(([sk, val]) => {
@@ -2050,175 +1955,157 @@ document.querySelectorAll('.locked-field').forEach(el => {
 document.querySelectorAll('.prof-val').forEach(el => {
   el.addEventListener('input', () => { refreshZeroHidden(); save(); });
 });
-// ── ESTELLA — PURE ELECTRICITY ──
-// Constant crackling arcs between random points, plasma glow, always alive
+// ── ESTELLA — HEARTBEAT PULSE ──
 (function() {
-  var bg   = document.getElementById('stormBg');
-  var bolt = document.getElementById('boltCanvas');
-  if (!bg || !bolt) return;
-  var bc = bg.getContext('2d');
-  var lc = bolt.getContext('2d');
+  var canvas = document.getElementById('pulseCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
   var W, H;
 
   function resize() {
-    W = bg.width = bolt.width = window.innerWidth;
-    H = bg.height = bolt.height = window.innerHeight;
-    drawBg();
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
   }
   resize();
   window.addEventListener('resize', resize);
 
-  // Static background — deep black with plasma glow nodes
-  var glowNodes = [];
-  function initNodes() {
-    glowNodes = [];
-    for (var i=0;i<6;i++) {
-      glowNodes.push({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        r: 80+Math.random()*200,
-        a: 0.015+Math.random()*0.025,
-        phase: Math.random()*Math.PI*2,
-        speed: 0.003+Math.random()*0.005
-      });
-    }
+  // Persistent warm glow from center — always on
+  function drawBase() {
+    ctx.clearRect(0,0,W,H);
+    // Deep warm dark fill
+    ctx.fillStyle = '#0c0905';
+    ctx.fillRect(0,0,W,H);
+    // Central warm plasma glow — always present, low level
+    var cx = W*0.5, cy = H*0.42;
+    var bg = ctx.createRadialGradient(cx,cy,0, cx,cy, Math.min(W,H)*0.55);
+    bg.addColorStop(0,   'rgba(245,208,0,0.055)');
+    bg.addColorStop(0.3, 'rgba(200,150,0,0.025)');
+    bg.addColorStop(1,   'transparent');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0,0,W,H);
   }
 
-  function drawBg() {
-    bc.clearRect(0,0,W,H);
-    bc.fillStyle='#07060f';
-    bc.fillRect(0,0,W,H);
-    if (!glowNodes || !glowNodes.length) return;
-    // Plasma glow nodes — always pulsing
-    glowNodes.forEach(function(n) {
-      n.phase += n.speed;
-      var alpha = n.a * (0.5 + 0.5*Math.sin(n.phase));
-      var g = bc.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
-      g.addColorStop(0,   'rgba(245,208,0,'+alpha+')');
-      g.addColorStop(0.4, 'rgba(200,160,0,'+(alpha*0.4)+')');
-      g.addColorStop(1,   'transparent');
-      bc.fillStyle=g;
-      bc.fillRect(n.x-n.r,n.y-n.r,n.r*2,n.r*2);
-    });
-  }
-
-  // Iterative midpoint displacement — no recursion
+  // Iterative bolt — no recursion
   function makeBolt(x1,y1,x2,y2,iters) {
     var pts=[{x:x1,y:y1},{x:x2,y:y2}];
-    var spread=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))*0.35;
+    var spread=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))*0.4;
     for (var i=0;i<iters;i++) {
       var nxt=[];
       for (var j=0;j<pts.length-1;j++) {
         nxt.push(pts[j]);
-        var angle=Math.atan2(pts[j+1].y-pts[j].y,pts[j+1].x-pts[j].x)+Math.PI/2;
-        var disp=(Math.random()-.5)*spread;
-        nxt.push({
-          x:(pts[j].x+pts[j+1].x)/2+Math.cos(angle)*disp,
-          y:(pts[j].y+pts[j+1].y)/2+Math.sin(angle)*disp
-        });
+        var perp=Math.atan2(pts[j+1].y-pts[j].y,pts[j+1].x-pts[j].x)+Math.PI/2;
+        var d=(Math.random()-.5)*spread;
+        nxt.push({x:(pts[j].x+pts[j+1].x)/2+Math.cos(perp)*d,
+                  y:(pts[j].y+pts[j+1].y)/2+Math.sin(perp)*d});
       }
       nxt.push(pts[pts.length-1]);
-      pts=nxt; spread*=0.55;
+      pts=nxt; spread*=0.52;
     }
     return pts;
   }
 
-  function strokeArc(pts,alpha,lw,blur) {
-    if (pts.length < 2) return;
-    lc.beginPath();
-    lc.moveTo(pts[0].x,pts[0].y);
-    for (var i=1;i<pts.length;i++) lc.lineTo(pts[i].x,pts[i].y);
-    lc.strokeStyle='rgba(255,238,40,'+alpha+')';
-    lc.lineWidth=lw;
-    lc.shadowColor='#f5d000';
-    lc.shadowBlur=blur;
-    lc.stroke();
-    lc.shadowBlur=0;
+  function drawBolt(pts,alpha,lw,blur) {
+    if (!pts||pts.length<2) return;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x,pts[0].y);
+    for (var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.strokeStyle='rgba(255,238,40,'+alpha+')';
+    ctx.lineWidth=lw;
+    ctx.shadowColor='#f5d000';
+    ctx.shadowBlur=blur;
+    ctx.stroke();
+    ctx.shadowBlur=0;
   }
 
-  // Arc endpoints — pick from edge or random interior
-  function randPoint() {
-    var edge=Math.floor(Math.random()*4);
-    if (edge===0) return {x:Math.random()*W, y:0};
-    if (edge===1) return {x:W, y:Math.random()*H};
-    if (edge===2) return {x:Math.random()*W, y:H};
-    return {x:0, y:Math.random()*H};
-  }
-
-  // Active arcs
-  var arcs = [];
-
-  function spawnArc() {
-    var p1, p2;
-    // Mix of: edge-to-edge, edge-to-interior, node-to-node
-    var type = Math.random();
-    if (type < 0.4) {
-      // Edge to edge
-      p1 = randPoint();
-      p2 = randPoint();
-    } else if (type < 0.75) {
-      // Edge to interior
-      p1 = randPoint();
-      p2 = {x:W*(0.1+Math.random()*0.8), y:H*(0.1+Math.random()*0.8)};
-    } else {
-      // Node to node (between plasma glow centers)
-      if (!glowNodes.length) { p1=randPoint(); p2=randPoint(); } else { var n1=glowNodes[Math.floor(Math.random()*glowNodes.length)];
-      var n2=glowNodes[Math.floor(Math.random()*glowNodes.length)]; }
-      p1={x:n1.x+(Math.random()-.5)*40, y:n1.y+(Math.random()-.5)*40};
-      p2={x:n2.x+(Math.random()-.5)*40, y:n2.y+(Math.random()-.5)*40};
-    }
-    var pts = makeBolt(p1.x,p1.y,p2.x,p2.y,6);
-    arcs.push({pts:pts, life:0, maxLife:4+Math.random()*8, alpha:0.7+Math.random()*0.3});
-  }
-
-  var t=0;
-  function frame() {
-    t++;
-    // Redraw background every few frames for pulse effect
-    if (t%2===0) drawBg();
-
-    lc.clearRect(0,0,W,H);
-    bolt.style.opacity='1';
-
-    // Spawn new arcs
-    if (Math.random()<0.35) spawnArc();
-    if (arcs.length < 3 && Math.random()<0.5) spawnArc();
-
-    // Draw and age arcs
-    arcs = arcs.filter(function(a) {
-      a.life++;
-      var progress = a.life/a.maxLife;
-      var fade = progress < 0.3
-        ? progress/0.3                    // fade in
-        : 1-(progress-0.3)/0.7;          // fade out
-      var alpha = a.alpha * fade;
-      if (alpha > 0.01) {
-        // Outer glow
-        strokeArc(a.pts, alpha*0.12, 8, 50);
-        // Inner glow
-        strokeArc(a.pts, alpha*0.4,  2.5, 20);
-        // Core
-        strokeArc(a.pts, alpha*0.95, 0.8, 8);
-        // Occasional sub-branch mid-arc
-        if (a.life===2 && Math.random()<0.5) {
-          var mi=Math.floor(a.pts.length*(0.3+Math.random()*0.4));
-          var bp=makeBolt(a.pts[mi].x,a.pts[mi].y,
-            a.pts[mi].x+(Math.random()-.5)*100,
-            a.pts[mi].y+(Math.random()-.5)*100,4);
-          strokeArc(bp,alpha*0.5,0.6,6);
-        }
+  // Fire lightning arcs outward from centre
+  function firePulse(intensity) {
+    var cx=W*0.5, cy=H*0.42;
+    var numArcs = 4+Math.floor(Math.random()*4);
+    for (var i=0;i<numArcs;i++) {
+      var angle = (Math.PI*2/numArcs)*i + (Math.random()-.5)*0.4;
+      var len   = (80+Math.random()*160)*intensity;
+      var ex    = cx + Math.cos(angle)*len;
+      var ey    = cy + Math.sin(angle)*len;
+      var pts   = makeBolt(cx,cy,ex,ey,6);
+      drawBolt(pts, 0.08*intensity, 6, 40);
+      drawBolt(pts, 0.3*intensity,  2, 18);
+      drawBolt(pts, 0.9*intensity,  0.8, 8);
+      // Sub-branch
+      if (Math.random()<0.5) {
+        var mi=Math.floor(pts.length*0.5);
+        var ba=angle+(Math.random()-.5)*1.2;
+        var bl=len*0.4;
+        var bp=makeBolt(pts[mi].x,pts[mi].y,
+          pts[mi].x+Math.cos(ba)*bl, pts[mi].y+Math.sin(ba)*bl, 4);
+        drawBolt(bp, 0.4*intensity, 0.6, 5);
       }
-      return a.life < a.maxLife;
-    });
-
-    requestAnimationFrame(frame);
+    }
   }
 
-  initNodes();
-  drawBg();
-  // Spawn a few immediately so it's not empty
-  for (var i=0;i<3;i++) spawnArc();
-  frame();
+  // Pulse glow ring that expands outward
+  function drawPulseRing(radius, alpha) {
+    var cx=W*0.5, cy=H*0.42;
+    var g = ctx.createRadialGradient(cx,cy,radius*0.7, cx,cy,radius);
+    g.addColorStop(0,   'rgba(245,208,0,0)');
+    g.addColorStop(0.7, 'rgba(245,208,0,'+(alpha*0.6)+')');
+    g.addColorStop(1,   'rgba(245,208,0,0)');
+    ctx.fillStyle=g;
+    ctx.fillRect(cx-radius,cy-radius,radius*2,radius*2);
+  }
+
+  // Heartbeat: double-pulse every 5 seconds
+  // Beat 1, short pause, Beat 2, long rest — like a real heart
+  var pulseState = null;
+  var pulseT     = 0;
+  var pulseDur   = 0;
+  var pulseAlpha = 0;
+  var pulseRad   = 0;
+  var beatQueue  = [];
+
+  function scheduleBeat() {
+    // Double beat: two pulses 300ms apart, then 5s rest
+    setTimeout(function() {
+      triggerBeat(1.0);
+      setTimeout(function() {
+        triggerBeat(0.7);
+        scheduleBeat();
+      }, 300);
+    }, 5000);
+  }
+
+  var activePulses = [];
+
+  function triggerBeat(intensity) {
+    activePulses.push({r:0, maxR:Math.min(W,H)*0.6, alpha:intensity, t:0, maxT:40, intensity:intensity});
+    // Fire lightning immediately on beat
+    drawBase();
+    firePulse(intensity);
+  }
+
+  // Animation loop
+  var frame = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    frame++;
+
+    // Redraw base every frame
+    drawBase();
+
+    // Draw expanding pulse rings
+    activePulses = activePulses.filter(function(p) {
+      p.t++;
+      var progress = p.t / p.maxT;
+      p.r = p.maxR * Math.pow(progress, 0.5);
+      var alpha = p.alpha * (1-progress) * 0.15;
+      if (alpha > 0.002) {
+        drawPulseRing(p.r, alpha);
+      }
+      return p.t < p.maxT;
+    });
+  }
+
+  animate();
+  scheduleBeat();
 })();
 
 </script>
