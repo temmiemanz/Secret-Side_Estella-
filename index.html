@@ -802,6 +802,102 @@ body { background: #0c0905; min-height: 100vh; }
 .estella-lore em { color: var(--accent); font-style: normal; text-shadow: 0 0 6px rgba(245,208,0,0.2); }
 .estella-lore .age-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.2em; color: rgba(245,208,0,0.35); text-transform: uppercase; margin-bottom: -8px; }
 
+
+/* ══════════════════════════════════════════
+   CHARGE WIDGET
+   ══════════════════════════════════════════ */
+.cw { display: flex; flex-direction: column; gap: 12px; }
+
+/* Volt meter */
+.cw-meter-row { display: flex; align-items: center; gap: 10px; }
+.cw-volt-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.18em; color: var(--muted); width: 44px; flex-shrink: 0; }
+.cw-meter-track {
+  flex: 1; height: 10px; background: rgba(245,208,0,0.08);
+  border: 1px solid rgba(245,208,0,0.15); border-radius: 2px; overflow: hidden;
+}
+.cw-meter-fill {
+  height: 100%; background: linear-gradient(90deg, rgba(245,150,0,0.8), rgba(245,220,0,1));
+  border-radius: 2px; transition: width 0.3s, box-shadow 0.3s;
+  box-shadow: 0 0 8px rgba(245,208,0,0.4);
+}
+.cw-volt-num {
+  font-family: var(--font-display); font-size: 22px; font-weight: 700;
+  color: var(--accent); min-width: 48px; text-align: right;
+  text-shadow: 0 0 10px rgba(245,208,0,0.5);
+}
+
+/* Damage input */
+.cw-dmg-row { display: flex; align-items: center; gap: 8px; }
+.cw-dmg-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; flex: 1; }
+.cw-dmg-input {
+  background: var(--input); border: 1px solid rgba(245,208,0,0.15);
+  color: var(--text); font-family: var(--font-display); font-size: 16px;
+  width: 56px; text-align: center; padding: 4px 6px;
+  border-radius: var(--radius); outline: none; transition: border-color var(--transition);
+}
+.cw-dmg-input:focus { border-color: var(--accent); }
+.cw-dmg-btn {
+  padding: 5px 14px; border: 1px solid rgba(245,208,0,0.2); background: none;
+  color: var(--accent); border-radius: var(--radius); cursor: pointer;
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.08em; transition: all var(--transition);
+}
+.cw-dmg-btn:hover { background: rgba(245,208,0,0.1); border-color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.15); }
+.cw-half-note { font-size: 10px; color: var(--muted); font-style: italic; }
+
+.cw-divider { height: 1px; background: rgba(245,208,0,0.08); }
+
+/* Level 1 toggle */
+.cw-lv1-row { display: flex; align-items: center; gap: 10px; }
+.cw-lv1-toggle {
+  width: 36px; height: 20px; border-radius: 10px;
+  border: 1px solid rgba(245,208,0,0.2); background: var(--input);
+  cursor: pointer; position: relative; transition: all 0.2s; flex-shrink: 0;
+}
+.cw-lv1-toggle.on { background: rgba(245,208,0,0.2); border-color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.2); }
+.cw-lv1-toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--muted); transition: all 0.2s;
+}
+.cw-lv1-toggle.on::after { left: 19px; background: var(--accent); box-shadow: 0 0 6px rgba(245,208,0,0.5); }
+.cw-lv1-text { display: flex; flex-direction: column; gap: 1px; }
+.cw-lv1-name { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--text); }
+.cw-lv1-desc { font-size: 11px; color: var(--dim); line-height: 1.5; }
+.cw-lv1-passive { font-size: 9px; color: var(--muted); font-style: italic; }
+
+/* Spend levels */
+.cw-levels { display: flex; flex-direction: column; gap: 6px; }
+.cw-level-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 10px; border: 1px solid rgba(245,208,0,0.07);
+  border-radius: var(--radius); background: rgba(12,9,4,0.6);
+  transition: border-color var(--transition);
+}
+.cw-level-row:hover { border-color: rgba(245,208,0,0.15); }
+.cw-level-row.disabled { opacity: 0.35; }
+.cw-level-info { flex: 1; }
+.cw-level-name {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.1em; color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+}
+.cw-level-cost {
+  font-size: 10px; font-weight: 700; color: var(--accent);
+  background: rgba(245,208,0,0.1); border: 1px solid rgba(245,208,0,0.2);
+  border-radius: 2px; padding: 1px 5px; letter-spacing: 0.06em;
+}
+.cw-level-desc { font-size: 11px; color: var(--dim); line-height: 1.55; margin-top: 2px; }
+.cw-spend-btn {
+  flex-shrink: 0; padding: 4px 12px; margin-top: 1px;
+  border: 1px solid rgba(245,208,0,0.2); background: none;
+  color: var(--accent); border-radius: var(--radius); cursor: pointer;
+  font-family: var(--font-display); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; transition: all var(--transition);
+}
+.cw-spend-btn:hover:not(:disabled) { background: rgba(245,208,0,0.1); border-color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.15); }
+.cw-spend-btn:disabled { opacity: 0.3; cursor: default; }
+
 </style>
 </head>
 <body>
@@ -1028,9 +1124,78 @@ body { background: #0c0905; min-height: 100vh; }
     </div>
     <div class="ab-pane active" id="ab-ability">
       <div id="abilityWidget" class="ability-widget-shell">
-        <div class="ability-widget-placeholder">
-          <span class="awp-icon">⚡</span>
-          <span class="awp-text">Ability widget goes here.<br>Each character gets a custom build for their power.</span>
+        <div class="cw" id="chargeWidget">
+
+          <!-- VOLT METER -->
+          <div class="cw-meter-row">
+            <span class="cw-volt-label">VOLTS</span>
+            <div class="cw-meter-track">
+              <div class="cw-meter-fill" id="cwFill" style="width:0%"></div>
+            </div>
+            <span class="cw-volt-num" id="cwNum">0</span>
+          </div>
+
+          <!-- DAMAGE INPUT -->
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div class="cw-dmg-row">
+              <span class="cw-dmg-label">Damage taken</span>
+              <input class="cw-dmg-input" id="cwDmgInput" type="number" min="0" placeholder="0">
+              <button class="cw-dmg-btn" onclick="cwTakeDamage()">Take</button>
+            </div>
+            <span class="cw-half-note">Half goes to HP loss · Half converts to Volts</span>
+          </div>
+
+          <div class="cw-divider"></div>
+
+          <!-- LEVEL 1 — passive toggle -->
+          <div class="cw-lv1-row">
+            <div class="cw-lv1-toggle" id="cwLv1Toggle" onclick="cwToggleLv1()"></div>
+            <div class="cw-lv1-text">
+              <span class="cw-lv1-name">Lv 1 — Surge</span>
+              <span class="cw-lv1-desc">Advantage on one STR roll or combat action.</span>
+              <span class="cw-lv1-passive">Passive · uncontrollable · heart-dependent</span>
+            </div>
+          </div>
+
+          <div class="cw-divider"></div>
+
+          <!-- LEVELS 2–5 -->
+          <div class="cw-levels">
+
+            <div class="cw-level-row" id="cwRow2">
+              <div class="cw-level-info">
+                <div class="cw-level-name">Lv 2 — Shock Touch <span class="cw-level-cost">5V</span></div>
+                <div class="cw-level-desc">On hit: electrifies target enough to stun for one turn. Deals d8 + STR.</div>
+              </div>
+              <button class="cw-spend-btn" id="cwBtn2" onclick="cwSpend(5)">Use</button>
+            </div>
+
+            <div class="cw-level-row" id="cwRow3">
+              <div class="cw-level-info">
+                <div class="cw-level-name">Lv 3 — Discharge <span class="cw-level-cost">10V+</span></div>
+                <div class="cw-level-desc">All creatures in 15ft radius take the Lv 2 effect. Radius expands +5ft per 5 extra Volts spent.</div>
+              </div>
+              <button class="cw-spend-btn" id="cwBtn3" onclick="cwSpendLv3()">Use</button>
+            </div>
+
+            <div class="cw-level-row" id="cwRow4">
+              <div class="cw-level-info">
+                <div class="cw-level-name">Lv 4 — Live Wire <span class="cw-level-cost">30V</span></div>
+                <div class="cw-level-desc">Body becomes a hazard. Touch or conductive surface contact deals 3d8 + STR. Estella electrifies any conductive surface she touches.</div>
+              </div>
+              <button class="cw-spend-btn" id="cwBtn4" onclick="cwSpend(30)">Use</button>
+            </div>
+
+            <div class="cw-level-row" id="cwRow5">
+              <div class="cw-level-info">
+                <div class="cw-level-name">Lv 5 — Arc <span class="cw-level-cost">50V</span></div>
+                <div class="cw-level-desc">Shoot arcs from her nails at a target. On hit: 5d8 damage + Shock (roll each turn, need 15+ to clear, skip turn while shocked) + Electrified (2 dmg/turn while shocked).</div>
+              </div>
+              <button class="cw-spend-btn" id="cwBtn5" onclick="cwSpend(50)">Use</button>
+            </div>
+
+          </div>
+
         </div>
       </div>
     </div>
@@ -1120,8 +1285,8 @@ const CHAR_DEFAULTS = {
   mnd:         12,
   sol:         8,
   def:         16,
-  hp:          12,
-  hpMax:       12,
+  hp:          26,
+  hpMax:       26,
   level:       1,
   powerCat:    'Embodiment',
   powerType:   'EGG',
@@ -1955,6 +2120,93 @@ document.querySelectorAll('.locked-field').forEach(el => {
 document.querySelectorAll('.prof-val').forEach(el => {
   el.addEventListener('input', () => { refreshZeroHidden(); save(); });
 });
+// ══════════════════════════════════════════
+// CHARGE WIDGET
+// ══════════════════════════════════════════
+const CW_KEY  = 'estella_charge_v1';
+const CW_MAX  = 50;
+let cwVolts   = 0;
+let cwLv1On   = false;
+
+function cwUpdate() {
+  var pct = Math.min(100, (cwVolts / CW_MAX) * 100);
+  document.getElementById('cwFill').style.width = pct + '%';
+  document.getElementById('cwNum').textContent  = cwVolts;
+  // Enable/disable spend buttons
+  var levels = [{id:'cwBtn2',cost:5},{id:'cwBtn3',cost:10},{id:'cwBtn4',cost:30},{id:'cwBtn5',cost:50}];
+  levels.forEach(function(l) {
+    var btn = document.getElementById(l.id);
+    var row = document.getElementById(l.id.replace('Btn','Row'));
+    if (!btn) return;
+    btn.disabled = cwVolts < l.cost;
+    if (row) row.classList.toggle('disabled', cwVolts < l.cost);
+  });
+  cwSave();
+}
+
+function cwTakeDamage() {
+  var dmg = parseInt(document.getElementById('cwDmgInput').value) || 0;
+  if (dmg <= 0) return;
+  var voltGain = Math.floor(dmg / 2);
+  var hpLoss   = Math.ceil(dmg / 2);
+  cwVolts = Math.min(CW_MAX, cwVolts + voltGain);
+  // Apply HP loss
+  var hpEl = document.getElementById('currentHp');
+  if (hpEl) {
+    var cur = parseInt(hpEl.value) || 0;
+    hpEl.value = Math.max(0, cur - hpLoss);
+    save();
+  }
+  document.getElementById('cwDmgInput').value = '';
+  cwUpdate();
+  showToast(voltGain, voltGain, 'Charge +'+ voltGain +' V (HP -'+ hpLoss +')');
+}
+
+function cwSpend(cost) {
+  if (cwVolts < cost) return;
+  cwVolts -= cost;
+  cwUpdate();
+  showToast(cost, cwVolts, 'Spent '+ cost +'V — '+ cwVolts +'V remaining');
+}
+
+function cwSpendLv3() {
+  if (cwVolts < 10) return;
+  var extra = cwVolts - 10;
+  var extraSpent = Math.floor(extra / 5) * 5; // how much extra they WANT to spend
+  // Spend minimum 10, player decides extra via prompt isn't great — just spend all available up to max useful
+  // Show current volts and let them decide via spending 10 base
+  var spent = 10;
+  cwVolts -= spent;
+  var radius = 15 + Math.floor(cwVolts / 5) * 5;
+  cwUpdate();
+  showToast(spent, cwVolts, 'Discharge — '+ radius +'ft radius');
+}
+
+function cwToggleLv1() {
+  cwLv1On = !cwLv1On;
+  document.getElementById('cwLv1Toggle').classList.toggle('on', cwLv1On);
+  cwSave();
+}
+
+function cwSave() {
+  try { localStorage.setItem(CW_KEY, JSON.stringify({volts:cwVolts, lv1:cwLv1On})); } catch(e) {}
+}
+
+function cwLoad() {
+  var d; try { d=JSON.parse(localStorage.getItem(CW_KEY)); } catch(e) {}
+  if (!d) return;
+  cwVolts = d.volts ?? 0;
+  cwLv1On = d.lv1   ?? false;
+  document.getElementById('cwLv1Toggle').classList.toggle('on', cwLv1On);
+  cwUpdate();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  cwLoad();
+  var inp = document.getElementById('cwDmgInput');
+  if (inp) inp.addEventListener('keydown', function(e) { if (e.key==='Enter') cwTakeDamage(); });
+});
+
 // ── ESTELLA — HEARTBEAT PULSE ──
 (function() {
   var canvas = document.getElementById('pulseCanvas');
