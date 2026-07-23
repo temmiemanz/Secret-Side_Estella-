@@ -12,23 +12,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;600&display=swap');
 
 :root {
-  --bg:           #0c0905;
-  --panel:        #131008;
-  --panel2:       #18140a;
-  --border:       #1e1a0e;
-  --border2:      #2a2416;
+  --bg:           #07060c;
+  --panel:        #0d0b14;
+  --panel2:       #100e18;
+  --border:       #1a1828;
+  --border2:      #242238;
   --accent:       #f5d000;
-  --text:         #e8dfc0;
-  --muted:        #4a4020;
-  --dim:          #7a6e40;
-  --input:        #0a0804;
+  --text:         #e8e0c0;
+  --muted:        #3a3858;
+  --dim:          #6a6888;
+  --input:        #060510;
   --red:          #c03030;
   --green:        #2a8a4a;
   --shadow-sm:    0 2px 12px rgba(0,0,0,0.5);
   --font-main:    'Exo 2', system-ui, sans-serif;
   --font-display: 'Rajdhani', sans-serif;
   --radius:       2px;
-  --radius-lg:    4px;
+  --radius-lg:    3px;
   --transition:   0.15s;
 }
 
@@ -675,228 +675,251 @@ body.editing .prof-label { display: inline; font-size: 9px; color: var(--muted);
 .ds-roll:hover { background: var(--red); color: #fff; }
 
 /* ══════════════════════════════════════════
-   ESTELLA — INTERNAL ELECTRIC THEME
+   ESTELLA — ELECTRIC SHARP THEME
    ══════════════════════════════════════════ */
+body { background: #07060c; min-height: 100vh; }
+#pulseCanvas { position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0; }
+.page { position:relative;z-index:1; }
 
-body { background: #0c0905; min-height: 100vh; }
+/* Clip-path utility */
+.clip-sharp { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); }
 
-#pulseCanvas {
-  position: fixed; inset: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-}
-.page { position: relative; z-index: 1; }
-
+/* Cards */
 .card {
-  background: rgba(19,16,8,0.96);
-  border: 1px solid rgba(245,208,0,0.1);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.7);
-  transition: border-color 0.3s;
+  background: #0d0b14;
+  border: 1px solid rgba(245,208,0,0.22);
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  box-shadow: 0 0 0 1px rgba(245,208,0,0.05), 0 4px 32px rgba(0,0,0,0.85);
+  position: relative; overflow: hidden;
+  transition: border-color 0.2s;
 }
-.card:hover { border-color: rgba(245,208,0,0.22); }
+.card::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.12) 3px,rgba(0,0,0,0.12) 4px);
+  z-index:0;
+}
+.card > * { position:relative;z-index:1; }
+.card:hover { border-color: rgba(245,208,0,0.45); }
 
 .card-title {
-  font-family: var(--font-display);
-  font-size: 15px; font-weight: 700; letter-spacing: 0.2em;
-  color: var(--accent); border-bottom-color: rgba(245,208,0,0.12);
-  text-shadow: 0 0 10px rgba(245,208,0,0.35);
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: 0.26em; color: var(--accent);
+  background: rgba(245,208,0,0.06);
+  margin: -16px -18px 14px; padding: 9px 18px 8px;
+  border-bottom: 1px solid rgba(245,208,0,0.18);
+  text-shadow: 0 0 12px rgba(245,208,0,0.55), 0 0 30px rgba(245,208,0,0.15);
 }
-.card-title::after { background: rgba(245,208,0,0.06); }
+.card-title::after { display:none; }
 
+/* Header */
 .char-name-input {
-  font-family: var(--font-display);
-  font-size: 34px; font-weight: 700; letter-spacing: 0.06em;
-  color: var(--text);
+  font-family: var(--font-display); font-size: 36px; font-weight: 700;
+  letter-spacing: 0.05em; color: var(--accent);
+  text-shadow: 0 0 18px rgba(245,208,0,0.45), 0 0 50px rgba(245,208,0,0.12);
+}
+.field-label { color: rgba(245,208,0,0.35); letter-spacing: 0.16em; font-size: 8px; }
+.plain-field { color: var(--text); }
+.power-field, .power-select { color: var(--dim); font-size: 11px; }
+.power-sep { color: rgba(245,208,0,0.25); }
+
+/* HP */
+.hp-num { font-family: var(--font-display); font-size: 20px; color: var(--text); }
+.hp-label { color: rgba(245,208,0,0.35); letter-spacing: 0.16em; font-size: 8px; }
+.hp-slash { color: rgba(245,208,0,0.25); }
+.hp-ctrl-btn.heal { border-color: var(--green); color: var(--green); border-radius: 0; }
+.hp-ctrl-btn.dmg  { border-color: var(--red); color: var(--red); border-radius: 0; }
+.hp-amt { border-radius: 0; }
+
+/* Level */
+.level-label { color: rgba(245,208,0,0.35); letter-spacing: 0.18em; font-size: 8px; }
+.level-val {
+  font-family: var(--font-display); font-size: 50px; font-weight: 700;
+  color: var(--accent); line-height: 1;
+  text-shadow: 0 0 22px rgba(245,208,0,0.6), 0 0 60px rgba(245,208,0,0.18);
 }
 
-.field-label { color: var(--muted); letter-spacing: 0.12em; }
-.plain-field { color: var(--text); }
-.power-field, .power-select { color: var(--dim); font-size: 12px; }
-
-.stat-col { background: rgba(12,9,4,0.98); border-color: rgba(245,208,0,0.08); }
-.stat-header { background: rgba(245,208,0,0.05); border-bottom: 1px solid rgba(245,208,0,0.08); }
-.stat-name { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; color: var(--dim); }
+/* Stat cols — sharper cut */
+.stat-col {
+  background: #09080f;
+  border: 1px solid rgba(245,208,0,0.18);
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  overflow: hidden;
+}
+.stat-header {
+  background: rgba(245,208,0,0.07);
+  border-bottom: 1px solid rgba(245,208,0,0.14);
+}
+.stat-name {
+  font-family: var(--font-display); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.26em; color: rgba(245,208,0,0.45); text-transform: uppercase;
+}
 .stat-val { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text); }
-.stat-roll-line { background: rgba(245,208,0,0.025); border-bottom: 1px solid rgba(245,208,0,0.07); }
-.stat-roll-line:hover { background: rgba(245,208,0,0.06); cursor: pointer; }
-.stat-roll-text { font-family: var(--font-display); font-size: 13px; color: var(--accent); letter-spacing: 0.05em; text-shadow: 0 0 8px rgba(245,208,0,0.4); }
+.stat-roll-line {
+  background: rgba(245,208,0,0.03);
+  border-bottom: 1px solid rgba(245,208,0,0.08);
+  transition: background 0.12s;
+}
+.stat-roll-line:hover { background: rgba(245,208,0,0.08); cursor: pointer; }
+.stat-roll-text {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700;
+  color: var(--accent); text-shadow: 0 0 10px rgba(245,208,0,0.5);
+}
 
-.skill-name { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--dim); }
+/* Skills */
+.skill-name { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; color: rgba(245,208,0,0.38); text-transform: uppercase; }
 .skill-badge {
   font-family: var(--font-display); font-size: 14px; font-weight: 700;
-  background: rgba(245,208,0,0.07); border: 1px solid rgba(245,208,0,0.16);
-  color: var(--accent); min-width: 40px;
-  text-shadow: 0 0 6px rgba(245,208,0,0.3);
+  background: rgba(245,208,0,0.08); border: 1px solid rgba(245,208,0,0.2);
+  color: var(--accent); min-width: 40px; border-radius: 0;
+  text-shadow: 0 0 8px rgba(245,208,0,0.4);
+  clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
 }
-.skill-row:hover { background: rgba(245,208,0,0.03); }
-.skill-row:hover .skill-badge { border-color: rgba(245,208,0,0.45); box-shadow: 0 0 8px rgba(245,208,0,0.12); }
+.skill-row:hover { background: rgba(245,208,0,0.04); }
+.skill-row:hover .skill-badge { border-color: rgba(245,208,0,0.55); box-shadow: 0 0 12px rgba(245,208,0,0.2); }
 
-.roll-btn { border-color: rgba(245,208,0,0.15); color: rgba(245,208,0,0.45); font-family: var(--font-display); letter-spacing: 0.08em; }
-.roll-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.18); }
+.roll-btn {
+  font-family: var(--font-display); font-size: 9px; letter-spacing: 0.12em;
+  border-color: rgba(245,208,0,0.2); color: rgba(245,208,0,0.4); border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+}
+.roll-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px rgba(245,208,0,0.2); }
 
-.hp-num { font-family: var(--font-display); font-size: 20px; }
-.hp-label { color: var(--dim); letter-spacing: 0.12em; }
-.hp-ctrl-btn.heal { border-color: var(--green); color: var(--green); }
-.hp-ctrl-btn.dmg  { border-color: var(--red); color: var(--red); }
+/* Initiative / AC */
+.initiative-card { border-color: rgba(245,208,0,0.28) !important; }
+.initiative-card:hover { border-color: rgba(245,208,0,0.5) !important; }
+.init-modifier {
+  font-family: var(--font-display); font-size: 46px; font-weight: 700;
+  color: var(--accent); text-shadow: 0 0 20px rgba(245,208,0,0.6), 0 0 50px rgba(245,208,0,0.2);
+}
+.ac-derived { font-family: var(--font-display); font-size: 46px; font-weight: 700; color: var(--text); }
 
-.level-label { color: var(--dim); letter-spacing: 0.12em; }
-.level-val { font-family: var(--font-display); font-size: 46px; font-weight: 700; color: var(--accent); text-shadow: 0 0 18px rgba(245,208,0,0.4); }
+/* Edit btn */
+.edit-btn {
+  font-family: var(--font-display); letter-spacing: 0.2em; border-radius: 0;
+  border-color: rgba(245,208,0,0.2); color: rgba(245,208,0,0.45);
+  clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+}
+.edit-btn:hover, .edit-btn.active { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px rgba(245,208,0,0.2); }
 
-.initiative-card { border-color: rgba(245,208,0,0.15) !important; }
-.init-modifier { font-family: var(--font-display); font-size: 44px; font-weight: 700; color: var(--accent); text-shadow: 0 0 16px rgba(245,208,0,0.4); }
-.ac-derived { font-family: var(--font-display); font-size: 44px; font-weight: 700; }
+/* Tabs */
+.ab-tab { font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: rgba(245,208,0,0.35); }
+.ab-tab:hover { color: rgba(245,208,0,0.65); }
+.ab-tab.active { color: var(--accent); border-bottom-color: var(--accent); text-shadow: 0 0 10px rgba(245,208,0,0.4); }
+.ab-tab-bar { border-bottom-color: rgba(245,208,0,0.15); }
 
-.edit-btn { border-color: rgba(245,208,0,0.15); color: var(--muted); }
-.edit-btn:hover, .edit-btn.active { border-color: var(--accent); color: var(--accent); }
-
-.ab-tab { color: var(--muted); font-family: var(--font-display); font-size: 13px; letter-spacing: 0.12em; }
-.ab-tab.active { color: var(--accent); border-bottom-color: var(--accent); text-shadow: 0 0 8px rgba(245,208,0,0.3); }
-.ab-tab-bar { border-bottom-color: rgba(245,208,0,0.1); }
-
-.action-row { border-color: rgba(245,208,0,0.07); background: rgba(12,9,4,0.95); }
-.action-row:hover { border-color: rgba(245,208,0,0.18); }
-.action-name-text { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.05em; color: var(--text); }
-.action-flavor { color: var(--muted); }
-.action-notes-text { color: var(--dim); }
-.action-roll-text { color: var(--accent); text-shadow: 0 0 6px rgba(245,208,0,0.3); }
+/* Actions */
+.action-row {
+  border-color: rgba(245,208,0,0.1); background: rgba(9,8,15,0.95);
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+.action-row:hover { border-color: rgba(245,208,0,0.28); }
+.action-name-text { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.08em; color: var(--text); }
+.action-flavor { color: rgba(245,208,0,0.28); font-style: italic; }
+.action-notes-text { color: var(--dim); font-size: 11px; }
+.action-roll-text { color: var(--accent); font-family: var(--font-display); text-shadow: 0 0 6px rgba(245,208,0,0.35); }
+.action-roll-btn { border-color: rgba(245,208,0,0.2); color: rgba(245,208,0,0.45); border-radius: 0; }
 .action-roll-btn:hover { border-color: var(--accent); color: var(--accent); }
-.actions-section-label { font-family: var(--font-display); letter-spacing: 0.16em; }
-.actions-divider { background: rgba(245,208,0,0.07); }
+.actions-section-label { font-family: var(--font-display); letter-spacing: 0.24em; color: rgba(245,208,0,0.35); }
+.actions-divider { background: rgba(245,208,0,0.1); }
 
-.plain-textarea { background: rgba(10,8,4,0.98); border-color: rgba(245,208,0,0.08); }
-.plain-textarea:focus { border-color: rgba(245,208,0,0.28); }
-.inv-row input { background: rgba(10,8,4,0.98); border-color: rgba(245,208,0,0.08); }
-.inv-row input:focus { border-color: rgba(245,208,0,0.28); }
-.add-btn { border-color: rgba(245,208,0,0.08); }
-.add-btn:hover { border-color: rgba(245,208,0,0.35); color: var(--accent); }
+/* Inputs */
+.plain-textarea { background: #060510; border-color: rgba(245,208,0,0.12); border-radius: 0; }
+.plain-textarea:focus { border-color: rgba(245,208,0,0.4); }
+.inv-row input { background: #060510; border-color: rgba(245,208,0,0.12); color: var(--text); border-radius: 0; }
+.inv-row input:focus { border-color: rgba(245,208,0,0.4); }
+.add-btn { border-color: rgba(245,208,0,0.12); color: rgba(245,208,0,0.3); border-radius: 0; }
+.add-btn:hover { border-color: rgba(245,208,0,0.45); color: var(--accent); }
+.col-label { font-family: var(--font-display); letter-spacing: 0.18em; color: rgba(245,208,0,0.38); }
+.rm-btn { border-radius: 0; border-color: rgba(245,208,0,0.12); }
 
-.notes-trigger { background: var(--accent); color: #000; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.12em; box-shadow: 0 0 18px rgba(245,208,0,0.3); }
+/* Notes */
+.notes-trigger {
+  background: var(--accent); color: #000;
+  font-family: var(--font-display); font-weight: 700; letter-spacing: 0.18em;
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  box-shadow: 0 0 20px rgba(245,208,0,0.35);
+}
+.notes-trigger:hover { box-shadow: 0 0 35px rgba(245,208,0,0.5); }
 
-#diceBtn { background: rgba(19,16,8,0.97); border-color: rgba(245,208,0,0.15); color: var(--dim); }
-#diceBtn:hover { border-color: var(--accent); color: var(--accent); }
-#diceBtn.active { background: rgba(245,208,0,0.08); border-color: var(--accent); color: var(--accent); }
-#dicePanel { background: rgba(19,16,8,0.99); border-color: rgba(245,208,0,0.12); }
-.dice-die { background: var(--panel2); border-color: var(--border2); color: var(--dim); }
+/* Dice */
+#diceBtn {
+  background: #0d0b14; border-color: rgba(245,208,0,0.25); color: rgba(245,208,0,0.5);
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+#diceBtn:hover, #diceBtn.active { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 16px rgba(245,208,0,0.25); }
+#diceBtn.active { background: rgba(245,208,0,0.1); }
+#dicePanel { background: #0d0b14; border-color: rgba(245,208,0,0.2); border-radius: 0; }
+.dice-die { background: #09080f; border-color: rgba(245,208,0,0.14); color: rgba(245,208,0,0.5); border-radius: 0; }
 .dice-die:hover, .dice-die.selected { border-color: var(--accent); color: var(--accent); }
-.dice-die.selected { background: rgba(245,208,0,0.07); }
-.dice-roll-btn { background: var(--accent); color: #000; font-family: var(--font-display); font-weight: 700; }
+.dice-die.selected { background: rgba(245,208,0,0.08); box-shadow: 0 0 10px rgba(245,208,0,0.15); }
+.dice-roll-btn { background: var(--accent); color: #000; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.12em; border-radius: 0; }
+.dice-reset-btn { border-color: rgba(245,208,0,0.15); color: rgba(245,208,0,0.4); border-radius: 0; }
 
-#deathSaves { border-color: var(--red); background: rgba(150,20,20,0.08); }
-.ds-title { color: var(--red); font-family: var(--font-display); letter-spacing: 0.16em; }
-.ds-roll { border-color: var(--red); color: var(--red); font-family: var(--font-display); }
+/* Toast */
+.toast-item { background: #0d0b14; border-color: rgba(245,208,0,0.25); border-radius: 0; box-shadow: 0 0 20px rgba(245,208,0,0.1), 0 4px 20px rgba(0,0,0,0.7); }
+.toast-total { color: var(--accent); font-family: var(--font-display); text-shadow: 0 0 10px rgba(245,208,0,0.4); }
+.toast-label { color: rgba(245,208,0,0.45); letter-spacing: 0.08em; }
+
+/* Death saves */
+#deathSaves { border-color: var(--red); background: rgba(140,20,20,0.1); border-radius: 0; }
+.ds-title { color: var(--red); font-family: var(--font-display); letter-spacing: 0.24em; }
+.ds-roll { border-color: var(--red); color: var(--red); font-family: var(--font-display); border-radius: 0; }
 .ds-roll:hover { background: var(--red); color: #fff; }
 
-/* EKG decoration line */
-.ekg-bar {
-  width: 100%; height: 28px; opacity: 0.18;
-  background: none; margin: -4px 0 2px;
-  position: relative; overflow: hidden;
-}
-.ekg-bar svg { position: absolute; top: 0; left: 0; width: 200%; height: 100%; }
-@keyframes ekg-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.ekg-bar svg { animation: ekg-scroll 4s linear infinite; }
+/* Image card */
+.img-placeholder { border-color: rgba(245,208,0,0.12); border-radius: 0; }
+.img-placeholder:hover { border-color: rgba(245,208,0,0.35); color: var(--accent); }
+
+/* Warning */
+.page > div:first-child { color: rgba(245,208,0,0.2) !important; letter-spacing: 0.06em; }
+
+/* EKG */
+.ekg-bar { width:100%;height:28px;opacity:0.2;position:relative;overflow:hidden;margin-bottom:-4px; }
+.ekg-bar svg { position:absolute;top:0;left:0;width:200%;height:100%;animation:ekg-scroll 3.5s linear infinite; }
+@keyframes ekg-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
 /* Lore */
-.estella-lore { display: flex; flex-direction: column; gap: 14px; padding: 4px 2px 10px; }
-.estella-lore p { font-size: 13px; line-height: 1.9; color: var(--dim); }
-.estella-lore strong { color: var(--text); font-weight: 600; }
-.estella-lore em { color: var(--accent); font-style: normal; text-shadow: 0 0 6px rgba(245,208,0,0.2); }
-.estella-lore .age-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.2em; color: rgba(245,208,0,0.35); text-transform: uppercase; margin-bottom: -8px; }
-
-
-/* ══════════════════════════════════════════
-   CHARGE WIDGET
-   ══════════════════════════════════════════ */
-.cw { display: flex; flex-direction: column; gap: 12px; }
-
-/* Volt meter */
-.cw-meter-row { display: flex; align-items: center; gap: 10px; }
-.cw-volt-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.18em; color: var(--muted); width: 44px; flex-shrink: 0; }
-.cw-meter-track {
-  flex: 1; height: 10px; background: rgba(245,208,0,0.08);
-  border: 1px solid rgba(245,208,0,0.15); border-radius: 2px; overflow: hidden;
-}
-.cw-meter-fill {
-  height: 100%; background: linear-gradient(90deg, rgba(245,150,0,0.8), rgba(245,220,0,1));
-  border-radius: 2px; transition: width 0.3s, box-shadow 0.3s;
-  box-shadow: 0 0 8px rgba(245,208,0,0.4);
-}
-.cw-volt-num {
-  font-family: var(--font-display); font-size: 22px; font-weight: 700;
-  color: var(--accent); min-width: 48px; text-align: right;
-  text-shadow: 0 0 10px rgba(245,208,0,0.5);
+.estella-lore { display:flex;flex-direction:column;gap:14px;padding:4px 2px 10px; }
+.estella-lore p { font-size:13px;line-height:1.9;color:var(--dim); }
+.estella-lore strong { color:var(--text);font-weight:600; }
+.estella-lore em { color:var(--accent);font-style:normal;text-shadow:0 0 6px rgba(245,208,0,0.2); }
+.estella-lore .age-label {
+  font-family:var(--font-display);font-size:11px;letter-spacing:0.26em;
+  color:rgba(245,208,0,0.35);text-transform:uppercase;margin-bottom:-4px;
+  border-left:2px solid rgba(245,208,0,0.3);padding-left:8px;display:block;
 }
 
-/* Damage input */
-.cw-dmg-row { display: flex; align-items: center; gap: 8px; }
-.cw-dmg-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; flex: 1; }
-.cw-dmg-input {
-  background: var(--input); border: 1px solid rgba(245,208,0,0.15);
-  color: var(--text); font-family: var(--font-display); font-size: 16px;
-  width: 56px; text-align: center; padding: 4px 6px;
-  border-radius: var(--radius); outline: none; transition: border-color var(--transition);
-}
-.cw-dmg-input:focus { border-color: var(--accent); }
-.cw-dmg-btn {
-  padding: 5px 14px; border: 1px solid rgba(245,208,0,0.2); background: none;
-  color: var(--accent); border-radius: var(--radius); cursor: pointer;
-  font-family: var(--font-display); font-size: 13px; font-weight: 700;
-  letter-spacing: 0.08em; transition: all var(--transition);
-}
-.cw-dmg-btn:hover { background: rgba(245,208,0,0.1); border-color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.15); }
-.cw-half-note { font-size: 10px; color: var(--muted); font-style: italic; }
 
-.cw-divider { height: 1px; background: rgba(245,208,0,0.08); }
-
-/* Level 1 toggle */
-.cw-lv1-row { display: flex; align-items: center; gap: 10px; }
-.cw-lv1-toggle {
-  width: 36px; height: 20px; border-radius: 10px;
-  border: 1px solid rgba(245,208,0,0.2); background: var(--input);
-  cursor: pointer; position: relative; transition: all 0.2s; flex-shrink: 0;
+/* CHARGE WIDGET */
+.cw { display:flex;flex-direction:column;gap:12px; }
+.cw-meter-row { display:flex;align-items:center;gap:10px; }
+.cw-volt-label { font-family:var(--font-display);font-size:11px;letter-spacing:0.2em;color:rgba(245,208,0,0.4);width:48px;flex-shrink:0; }
+.cw-meter-track { flex:1;height:8px;background:rgba(245,208,0,0.07);border:1px solid rgba(245,208,0,0.15);border-radius:0;overflow:hidden; }
+.cw-meter-fill { height:100%;background:linear-gradient(90deg,rgba(200,120,0,0.9),rgba(245,220,0,1));transition:width 0.3s;box-shadow:0 0 8px rgba(245,208,0,0.5); }
+.cw-volt-num { font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--accent);min-width:48px;text-align:right;text-shadow:0 0 12px rgba(245,208,0,0.55); }
+.cw-divider { height:1px;background:rgba(245,208,0,0.1); }
+.cw-desc-section { display:flex;flex-direction:column;gap:6px; }
+.cw-desc-title { font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:0.14em;color:var(--accent);text-shadow:0 0 10px rgba(245,208,0,0.35); }
+.cw-desc-text { font-size:12px;color:var(--dim);line-height:1.7; }
+.cw-desc-text em { color:rgba(245,208,0,0.8);font-style:normal; }
+.cw-discharge-section { display:flex;align-items:center;gap:14px; }
+.cw-discharge-preview { display:flex;flex-direction:column;gap:2px;flex:1; }
+.cw-discharge-label { font-size:8px;font-weight:700;letter-spacing:0.22em;color:rgba(245,208,0,0.35);text-transform:uppercase; }
+.cw-discharge-dmg { font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--accent);line-height:1;text-shadow:0 0 18px rgba(245,208,0,0.55); }
+.cw-discharge-formula { font-size:10px;color:rgba(245,208,0,0.3);font-style:italic; }
+.cw-discharge-btn {
+  padding:12px 20px;border:1px solid var(--accent);background:rgba(245,208,0,0.06);color:var(--accent);
+  border-radius:0;cursor:pointer;font-family:var(--font-display);font-size:17px;font-weight:700;
+  letter-spacing:0.2em;transition:all 0.15s;text-shadow:0 0 8px rgba(245,208,0,0.4);
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
 }
-.cw-lv1-toggle.on { background: rgba(245,208,0,0.2); border-color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.2); }
-.cw-lv1-toggle::after {
-  content: ''; position: absolute; top: 3px; left: 3px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--muted); transition: all 0.2s;
-}
-.cw-lv1-toggle.on::after { left: 19px; background: var(--accent); box-shadow: 0 0 6px rgba(245,208,0,0.5); }
-.cw-lv1-text { display: flex; flex-direction: column; gap: 1px; }
-.cw-lv1-name { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--text); }
-.cw-lv1-desc { font-size: 11px; color: var(--dim); line-height: 1.5; }
-.cw-lv1-passive { font-size: 9px; color: var(--muted); font-style: italic; }
-
-/* Spend levels */
-.cw-levels { display: flex; flex-direction: column; gap: 6px; }
-.cw-level-row {
-  display: flex; align-items: flex-start; gap: 8px;
-  padding: 8px 10px; border: 1px solid rgba(245,208,0,0.07);
-  border-radius: var(--radius); background: rgba(12,9,4,0.6);
-  transition: border-color var(--transition);
-}
-.cw-level-row:hover { border-color: rgba(245,208,0,0.15); }
-.cw-level-row.disabled { opacity: 0.35; }
-.cw-level-info { flex: 1; }
-.cw-level-name {
-  font-family: var(--font-display); font-size: 13px; font-weight: 700;
-  letter-spacing: 0.1em; color: var(--text);
-  display: flex; align-items: center; gap: 6px;
-}
-.cw-level-cost {
-  font-size: 10px; font-weight: 700; color: var(--accent);
-  background: rgba(245,208,0,0.1); border: 1px solid rgba(245,208,0,0.2);
-  border-radius: 2px; padding: 1px 5px; letter-spacing: 0.06em;
-}
-.cw-level-desc { font-size: 11px; color: var(--dim); line-height: 1.55; margin-top: 2px; }
-.cw-spend-btn {
-  flex-shrink: 0; padding: 4px 12px; margin-top: 1px;
-  border: 1px solid rgba(245,208,0,0.2); background: none;
-  color: var(--accent); border-radius: var(--radius); cursor: pointer;
-  font-family: var(--font-display); font-size: 12px; font-weight: 700;
-  letter-spacing: 0.08em; transition: all var(--transition);
-}
-.cw-spend-btn:hover:not(:disabled) { background: rgba(245,208,0,0.1); border-color: var(--accent); box-shadow: 0 0 8px rgba(245,208,0,0.15); }
-.cw-spend-btn:disabled { opacity: 0.3; cursor: default; }
+.cw-discharge-btn:hover:not(:disabled) { background:rgba(245,208,0,0.14);box-shadow:0 0 24px rgba(245,208,0,0.3); }
+.cw-discharge-btn:disabled { opacity:0.2;cursor:default; }
 
 </style>
 </head>
@@ -918,7 +941,7 @@ body { background: #0c0905; min-height: 100vh; }
 
   <!-- HEADER -->
   <div class="card">
-    <div class="ekg-bar"><svg viewBox="0 0 800 28" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><polyline points="0,14 80,14 90,14 95,2 100,26 105,14 115,14 195,14 200,14 205,2 210,26 215,14 225,14 305,14 310,14 315,2 320,26 325,14 335,14 415,14 420,14 425,2 430,26 435,14 445,14 525,14 530,14 535,2 540,26 545,14 555,14 635,14 640,14 645,2 650,26 655,14 665,14 745,14 750,14 755,2 760,26 765,14 775,14 800,14" fill="none" stroke="#f5d000" stroke-width="1.5"/></svg></div>
+    <div class="ekg-bar"><svg viewBox="0 0 800 28" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><polyline points="0,14 60,14 70,14 75,2 80,26 85,14 95,14 155,14 160,14 165,2 170,26 175,14 185,14 245,14 250,14 255,2 260,26 265,14 275,14 335,14 340,14 345,2 350,26 355,14 365,14 425,14 430,14 435,2 440,26 445,14 455,14 515,14 520,14 525,2 530,26 535,14 545,14 605,14 610,14 615,2 620,26 625,14 635,14 695,14 700,14 705,2 710,26 715,14 725,14 800,14" fill="none" stroke="#f5d000" stroke-width="1.5"/></svg></div>
     <div class="header-grid">
 
       <div style="display:flex;flex-direction:column;gap:10px;">
@@ -1126,69 +1149,33 @@ body { background: #0c0905; min-height: 100vh; }
       <div id="abilityWidget" class="ability-widget-shell">
         <div class="cw" id="chargeWidget">
 
-          <!-- VOLT METER -->
           <div class="cw-meter-row">
             <span class="cw-volt-label">VOLTS</span>
-            <div class="cw-meter-track">
-              <div class="cw-meter-fill" id="cwFill" style="width:0%"></div>
-            </div>
+            <div class="cw-meter-track"><div class="cw-meter-fill" id="cwFill" style="width:0%"></div></div>
             <span class="cw-volt-num" id="cwNum">0</span>
           </div>
 
-          <!-- AUTO VOLT NOTE -->
-          <div style="font-size:10px;color:var(--muted);font-style:italic;letter-spacing:0.04em;">
+          <div style="font-size:10px;color:rgba(245,208,0,0.3);font-style:italic;letter-spacing:0.04em;">
             Volts charge automatically when HP drops. Estella is twice as durable as other characters.
           </div>
 
           <div class="cw-divider"></div>
 
-          <!-- LEVEL 1 — passive toggle -->
-          <div class="cw-lv1-row">
-            <div class="cw-lv1-toggle" id="cwLv1Toggle" onclick="cwToggleLv1()"></div>
-            <div class="cw-lv1-text">
-              <span class="cw-lv1-name">Lv 1 — Surge</span>
-              <span class="cw-lv1-desc">Advantage on one STR roll or combat action.</span>
-              <span class="cw-lv1-passive">Passive · uncontrollable · heart-dependent</span>
-            </div>
+          <div class="cw-desc-section">
+            <div class="cw-desc-title">Charge — Conduction</div>
+            <p class="cw-desc-text">On activation, Estella touches any conductive object and releases every stored Volt at once. Electricity travels through the entire connected surface simultaneously — metal, water, flesh in contact with either. She cannot hold back. She cannot trickle it. <em>It all goes.</em></p>
+            <p class="cw-desc-text">The decision isn't how much. It's <em>when</em>, and <em>what to touch</em>.</p>
           </div>
 
           <div class="cw-divider"></div>
 
-          <!-- LEVELS 2–5 -->
-          <div class="cw-levels">
-
-            <div class="cw-level-row" id="cwRow2">
-              <div class="cw-level-info">
-                <div class="cw-level-name">Lv 2 — Shock Touch <span class="cw-level-cost">5V</span></div>
-                <div class="cw-level-desc">On hit: electrifies target enough to stun for one turn. Deals d8 + STR.</div>
-              </div>
-              <button class="cw-spend-btn" id="cwBtn2" onclick="cwSpend(5)">Use</button>
+          <div class="cw-discharge-section">
+            <div class="cw-discharge-preview">
+              <span class="cw-discharge-label">TOTAL DAMAGE</span>
+              <span class="cw-discharge-dmg" id="cwDmgOut">0</span>
+              <span class="cw-discharge-formula" id="cwFormula">0V × 2</span>
             </div>
-
-            <div class="cw-level-row" id="cwRow3">
-              <div class="cw-level-info">
-                <div class="cw-level-name">Lv 3 — Discharge <span class="cw-level-cost">10V+</span></div>
-                <div class="cw-level-desc">All creatures in 15ft radius take the Lv 2 effect. Radius expands +5ft per 5 extra Volts spent.</div>
-              </div>
-              <button class="cw-spend-btn" id="cwBtn3" onclick="cwSpendLv3()">Use</button>
-            </div>
-
-            <div class="cw-level-row" id="cwRow4">
-              <div class="cw-level-info">
-                <div class="cw-level-name">Lv 4 — Live Wire <span class="cw-level-cost">30V</span></div>
-                <div class="cw-level-desc">Body becomes a hazard. Touch or conductive surface contact deals 3d8 + STR. Estella electrifies any conductive surface she touches.</div>
-              </div>
-              <button class="cw-spend-btn" id="cwBtn4" onclick="cwSpend(30)">Use</button>
-            </div>
-
-            <div class="cw-level-row" id="cwRow5">
-              <div class="cw-level-info">
-                <div class="cw-level-name">Lv 5 — Arc <span class="cw-level-cost">50V</span></div>
-                <div class="cw-level-desc">Shoot arcs from her nails at a target. On hit: 5d8 damage + Shock (roll each turn, need 15+ to clear, skip turn while shocked) + Electrified (2 dmg/turn while shocked).</div>
-              </div>
-              <button class="cw-spend-btn" id="cwBtn5" onclick="cwSpend(50)">Use</button>
-            </div>
-
+            <button class="cw-discharge-btn" id="cwDischargeBtn" onclick="cwDischarge()" disabled>DISCHARGE</button>
           </div>
 
         </div>
@@ -1238,14 +1225,12 @@ body { background: #0c0905; min-height: 100vh; }
     </div>
     <div class="lore-body" id="loreBody">
       <div class="estella-lore">
-        <div class="age-label">Ages 1–6</div>
-        <p>Born December 17th, one year into the apocalypse, into a family already buckling under the weight of a collapsing world. They put her up for adoption to give her a better shot — and didn't disclose the illnesses running through their bloodline, afraid it would cost her a good home. The Jones family took her in. Stable, reasonably kind, financially intact. <em>She never fit.</em> There was always a silent distance between her and their other children — nothing said, nothing done, just a gap that never closed. When her conditions started showing — slower, more breaks, conversations that took longer to parse — she started working out obsessively to keep pace. She didn't know she was making some of it worse. Burdened with the guilt of dragging everyone down, she ran at six.</p>
-
-        <div class="age-label">Ages 7–16</div>
-        <p>She found Odette almost immediately — or Odette found her. They became inseparable. <strong>Estella never told her about any of it.</strong> Not the anemia, not the knees, not the back. She pushed herself to exhaustion every day just to seem fine. She watched the cult take hold of Odette and couldn't figure out how to stop it. Watched her friend take lives and looked away until she couldn't anymore. At 13, two cities away, she tried to end it. The gun jammed. She was furious — <em>couldn't even do that right</em> — and on her way back got jumped by scavengers who took everything except the will to return. She bought a pistol and a shank and walked home. Found Odette. Said nothing. Just before 17, her heart started going wrong. Palpitations. Sharp chest pain. Quiet. Hidden.</p>
-
-        <div class="age-label">Ages 17–19</div>
-        <p>The same routine, every day: 6am, work out, scavenge, eat, scavenge, Odette, eat, work out, shower, sleep. Monotonous except for the flare-ups — heart, knees, hips, back, anemia, all of it untreated and ongoing. Then at 18 something shifted in Odette. A tension Estella could feel but couldn't name. She tried not to pry. Then Odette ran. <strong>Estella's whole world shattered.</strong> She searched for a month. When she found her, Odette was different. Estella didn't care. She just needed her back. <em>She still does. She just hasn't said it yet.</em></p>
+        <span class="age-label">Ages 1–6</span>
+        <p>Born December 17th, one year into the apocalypse. Her birth family was struggling — they put her up for adoption and didn't disclose the illnesses in their bloodline, afraid it would cost her a good home. The Jones family took her in: stable, reasonably kind, financially intact. <em>She never fit.</em> When her conditions started showing — slower, more breaks, conversations that took longer — she started working out obsessively to keep pace. She didn't know she was making some of it worse. Burdened with the guilt of dragging everyone down, she ran at six.</p>
+        <span class="age-label">Ages 7–16</span>
+        <p>She found Odette almost immediately. They became inseparable. <strong>Estella never told her about any of it.</strong> Not the anemia, not the knees, not the back. She pushed herself to exhaustion every day just to seem fine. She watched the cult take hold of Odette and couldn't stop it. Watched her friend take lives and looked away until she couldn't anymore. At 13, two cities away, she tried to end it. The gun jammed. <em>Couldn't even do that right.</em> She got jumped going home, lost everything, bought a pistol and a shank, walked back. Found Odette. Said nothing. Just before 17, her heart started going wrong — palpitations, sharp chest pain. Quiet. Hidden.</p>
+        <span class="age-label">Ages 17–19</span>
+        <p>The same routine every day. Monotonous except for the flare-ups — heart, knees, hips, back, anemia, all untreated. Then at 18 something shifted in Odette. A tension Estella could feel. She tried not to pry. Then Odette ran. <strong>Estella's whole world shattered.</strong> She searched for a month. When she found her, Odette was different. Estella didn't care. She just needed her back. <em>She still does. She just hasn't said it yet.</em></p>
       </div>
     </div>
   </div>
@@ -1274,18 +1259,10 @@ body { background: #0c0905; min-height: 100vh; }
 <script>
 // ── ESTELLA DEFAULTS ──
 const CHAR_DEFAULTS = {
-  name:        'Estella Jones',
-  player:      'Lilly',
-  str:         14,
-  mnd:         12,
-  sol:         8,
-  def:         16,
-  hp:          26,
-  hpMax:       26,
-  level:       1,
-  powerCat:    'Embodiment',
-  powerType:   'EGG',
-  abilityName: 'Charge',
+  name:'Estella Jones', player:'Lilly',
+  str:14, mnd:12, sol:8, def:16,
+  hp:26, hpMax:26, level:1,
+  powerCat:'Embodiment', powerType:'EGG', abilityName:'Charge',
 };
 
 const SAVE_KEY = 'estella_sheet_v1';
@@ -2115,242 +2092,158 @@ document.querySelectorAll('.locked-field').forEach(el => {
 document.querySelectorAll('.prof-val').forEach(el => {
   el.addEventListener('input', () => { refreshZeroHidden(); save(); });
 });
-// ══════════════════════════════════════════
-// CHARGE WIDGET
-// ══════════════════════════════════════════
-const CW_KEY  = 'estella_charge_v1';
-const CW_MAX  = 50;
-let cwVolts   = 0;
-let cwLv1On   = false;
+// ── CHARGE WIDGET ──
+const CW_KEY = 'estella_charge_v1';
+const CW_MAX = 50;
+let cwVolts  = 0;
 
 function cwUpdate() {
-  var pct = Math.min(100, (cwVolts / CW_MAX) * 100);
-  document.getElementById('cwFill').style.width = pct + '%';
-  document.getElementById('cwNum').textContent  = cwVolts;
-  // Enable/disable spend buttons
-  var levels = [{id:'cwBtn2',cost:5},{id:'cwBtn3',cost:10},{id:'cwBtn4',cost:30},{id:'cwBtn5',cost:50}];
-  levels.forEach(function(l) {
-    var btn = document.getElementById(l.id);
-    var row = document.getElementById(l.id.replace('Btn','Row'));
-    if (!btn) return;
-    btn.disabled = cwVolts < l.cost;
-    if (row) row.classList.toggle('disabled', cwVolts < l.cost);
-  });
-  cwSave();
+  const pct = Math.min(100, (cwVolts / CW_MAX) * 100);
+  const fill = document.getElementById('cwFill');
+  const num  = document.getElementById('cwNum');
+  const dmg  = document.getElementById('cwDmgOut');
+  const form = document.getElementById('cwFormula');
+  const btn  = document.getElementById('cwDischargeBtn');
+  if (fill) fill.style.width = pct + '%';
+  if (num)  num.textContent  = cwVolts;
+  if (dmg)  dmg.textContent  = cwVolts * 2;
+  if (form) form.textContent = cwVolts + 'V × 2';
+  if (btn)  btn.disabled     = cwVolts === 0;
+  try { localStorage.setItem(CW_KEY, JSON.stringify({volts: cwVolts})); } catch(e) {}
 }
 
-// HP watcher — detect drops and convert to Volts
-var cwLastHp = null;
-setInterval(function() {
-  var hpEl = document.getElementById('currentHp');
-  if (!hpEl) return;
-  var hp = parseInt(hpEl.value);
-  if (isNaN(hp)) return;
+function cwDischarge() {
+  if (cwVolts === 0) return;
+  const dmg = cwVolts * 2;
+  showToast(cwVolts, dmg, 'Discharge — ' + dmg + ' damage');
+  cwVolts = 0;
+  cwUpdate();
+}
+
+// HP watcher — convert HP drops to Volts silently
+let cwLastHp    = null;
+let cwReady     = false;
+setTimeout(() => { cwReady = true; }, 2000);
+setInterval(() => {
+  if (!cwReady) return;
+  const el = document.getElementById('currentHp');
+  if (!el) return;
+  const hp = parseInt(el.value);
+  if (isNaN(hp) || hp === 0) return;
   if (cwLastHp === null) { cwLastHp = hp; return; }
   if (hp < cwLastHp) {
-    var drop    = cwLastHp - hp;
-    var gained  = Math.min(drop, CW_MAX - cwVolts);
+    const gained = Math.min(cwLastHp - hp, CW_MAX - cwVolts);
     if (gained > 0) {
       cwVolts += gained;
       cwUpdate();
-      showToast(gained, cwVolts, 'Charge +' + gained + 'V — ' + cwVolts + 'V total');
+      const n = document.getElementById('cwNum');
+      if (n) { n.style.textShadow = '0 0 28px rgba(245,208,0,1)'; setTimeout(() => { n.style.textShadow = ''; }, 700); }
     }
   }
   cwLastHp = hp;
 }, 500);
 
-function cwSpend(cost) {
-  if (cwVolts < cost) return;
-  cwVolts -= cost;
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem(CW_KEY);
+  if (saved) { try { cwVolts = JSON.parse(saved).volts ?? 0; } catch(e) {} }
   cwUpdate();
-  showToast(cost, cwVolts, 'Spent '+ cost +'V — '+ cwVolts +'V remaining');
-}
-
-function cwSpendLv3() {
-  if (cwVolts < 10) return;
-  var extra = cwVolts - 10;
-  var extraSpent = Math.floor(extra / 5) * 5; // how much extra they WANT to spend
-  // Spend minimum 10, player decides extra via prompt isn't great — just spend all available up to max useful
-  // Show current volts and let them decide via spending 10 base
-  var spent = 10;
-  cwVolts -= spent;
-  var radius = 15 + Math.floor(cwVolts / 5) * 5;
-  cwUpdate();
-  showToast(spent, cwVolts, 'Discharge — '+ radius +'ft radius');
-}
-
-function cwToggleLv1() {
-  cwLv1On = !cwLv1On;
-  document.getElementById('cwLv1Toggle').classList.toggle('on', cwLv1On);
-  cwSave();
-}
-
-function cwSave() {
-  try { localStorage.setItem(CW_KEY, JSON.stringify({volts:cwVolts, lv1:cwLv1On})); } catch(e) {}
-}
-
-function cwLoad() {
-  var d; try { d=JSON.parse(localStorage.getItem(CW_KEY)); } catch(e) {}
-  if (!d) return;
-  cwVolts = d.volts ?? 0;
-  cwLv1On = d.lv1   ?? false;
-  document.getElementById('cwLv1Toggle').classList.toggle('on', cwLv1On);
-  cwUpdate();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  cwLoad();
 });
 
-// ── ESTELLA — HEARTBEAT PULSE ──
+// ── HEARTBEAT PULSE ──
 (function() {
-  var canvas = document.getElementById('pulseCanvas');
+  const canvas = document.getElementById('pulseCanvas');
   if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var W, H;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
-  // Persistent warm glow from center — always on
   function drawBase() {
     ctx.clearRect(0,0,W,H);
-    // Deep warm dark fill
-    ctx.fillStyle = '#0c0905';
+    ctx.fillStyle = '#07060c';
     ctx.fillRect(0,0,W,H);
-    // Central warm plasma glow — always present, low level
-    var cx = W*0.5, cy = H*0.42;
-    var bg = ctx.createRadialGradient(cx,cy,0, cx,cy, Math.min(W,H)*0.55);
-    bg.addColorStop(0,   'rgba(245,208,0,0.055)');
-    bg.addColorStop(0.3, 'rgba(200,150,0,0.025)');
-    bg.addColorStop(1,   'transparent');
-    ctx.fillStyle = bg;
+    const cx = W*0.5, cy = H*0.42;
+    const g = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(W,H)*0.5);
+    g.addColorStop(0,  'rgba(245,208,0,0.04)');
+    g.addColorStop(0.4,'rgba(180,140,0,0.015)');
+    g.addColorStop(1,  'transparent');
+    ctx.fillStyle = g;
     ctx.fillRect(0,0,W,H);
   }
 
-  // Iterative bolt — no recursion
-  function makeBolt(x1,y1,x2,y2,iters) {
-    var pts=[{x:x1,y:y1},{x:x2,y:y2}];
-    var spread=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))*0.4;
-    for (var i=0;i<iters;i++) {
-      var nxt=[];
-      for (var j=0;j<pts.length-1;j++) {
+  function makeBolt(x1,y1,x2,y2,n) {
+    let pts=[{x:x1,y:y1},{x:x2,y:y2}];
+    let sp=Math.sqrt((x2-x1)**2+(y2-y1)**2)*0.4;
+    for(let i=0;i<n;i++){
+      const nxt=[];
+      for(let j=0;j<pts.length-1;j++){
         nxt.push(pts[j]);
-        var perp=Math.atan2(pts[j+1].y-pts[j].y,pts[j+1].x-pts[j].x)+Math.PI/2;
-        var d=(Math.random()-.5)*spread;
-        nxt.push({x:(pts[j].x+pts[j+1].x)/2+Math.cos(perp)*d,
-                  y:(pts[j].y+pts[j+1].y)/2+Math.sin(perp)*d});
+        const a=Math.atan2(pts[j+1].y-pts[j].y,pts[j+1].x-pts[j].x)+Math.PI/2;
+        const d=(Math.random()-.5)*sp;
+        nxt.push({x:(pts[j].x+pts[j+1].x)/2+Math.cos(a)*d,y:(pts[j].y+pts[j+1].y)/2+Math.sin(a)*d});
       }
       nxt.push(pts[pts.length-1]);
-      pts=nxt; spread*=0.52;
+      pts=nxt; sp*=0.52;
     }
     return pts;
   }
 
   function drawBolt(pts,alpha,lw,blur) {
-    if (!pts||pts.length<2) return;
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x,pts[0].y);
-    for (var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x,pts[i].y);
+    if(!pts||pts.length<2)return;
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
     ctx.strokeStyle='rgba(255,238,40,'+alpha+')';
-    ctx.lineWidth=lw;
-    ctx.shadowColor='#f5d000';
-    ctx.shadowBlur=blur;
-    ctx.stroke();
-    ctx.shadowBlur=0;
+    ctx.lineWidth=lw;ctx.shadowColor='#f5d000';ctx.shadowBlur=blur;
+    ctx.stroke();ctx.shadowBlur=0;
   }
 
-  // Fire lightning arcs outward from centre
-  function firePulse(intensity) {
-    var cx=W*0.5, cy=H*0.42;
-    var numArcs = 4+Math.floor(Math.random()*4);
-    for (var i=0;i<numArcs;i++) {
-      var angle = (Math.PI*2/numArcs)*i + (Math.random()-.5)*0.4;
-      var len   = (80+Math.random()*160)*intensity;
-      var ex    = cx + Math.cos(angle)*len;
-      var ey    = cy + Math.sin(angle)*len;
-      var pts   = makeBolt(cx,cy,ex,ey,6);
-      drawBolt(pts, 0.08*intensity, 6, 40);
-      drawBolt(pts, 0.3*intensity,  2, 18);
-      drawBolt(pts, 0.9*intensity,  0.8, 8);
-      // Sub-branch
-      if (Math.random()<0.5) {
-        var mi=Math.floor(pts.length*0.5);
-        var ba=angle+(Math.random()-.5)*1.2;
-        var bl=len*0.4;
-        var bp=makeBolt(pts[mi].x,pts[mi].y,
-          pts[mi].x+Math.cos(ba)*bl, pts[mi].y+Math.sin(ba)*bl, 4);
-        drawBolt(bp, 0.4*intensity, 0.6, 5);
-      }
+  function pulse(intensity) {
+    const cx=W*0.5,cy=H*0.42;
+    const n=4+Math.floor(Math.random()*4);
+    for(let i=0;i<n;i++){
+      const a=(Math.PI*2/n)*i+(Math.random()-.5)*0.5;
+      const len=(70+Math.random()*140)*intensity;
+      const pts=makeBolt(cx,cy,cx+Math.cos(a)*len,cy+Math.sin(a)*len,6);
+      drawBolt(pts,0.07*intensity,6,40);
+      drawBolt(pts,0.28*intensity,2,16);
+      drawBolt(pts,0.9*intensity,0.7,8);
     }
   }
 
-  // Pulse glow ring that expands outward
-  function drawPulseRing(radius, alpha) {
-    var cx=W*0.5, cy=H*0.42;
-    var g = ctx.createRadialGradient(cx,cy,radius*0.7, cx,cy,radius);
-    g.addColorStop(0,   'rgba(245,208,0,0)');
-    g.addColorStop(0.7, 'rgba(245,208,0,'+(alpha*0.6)+')');
-    g.addColorStop(1,   'rgba(245,208,0,0)');
-    ctx.fillStyle=g;
-    ctx.fillRect(cx-radius,cy-radius,radius*2,radius*2);
+  const rings=[];
+  function beat(intensity) {
+    drawBase(); pulse(intensity);
+    rings.push({r:0,maxR:Math.min(W,H)*0.55,alpha:intensity,t:0,maxT:38});
   }
 
-  // Heartbeat: double-pulse every 5 seconds
-  // Beat 1, short pause, Beat 2, long rest — like a real heart
-  var pulseState = null;
-  var pulseT     = 0;
-  var pulseDur   = 0;
-  var pulseAlpha = 0;
-  var pulseRad   = 0;
-  var beatQueue  = [];
-
-  function scheduleBeat() {
-    // Double beat: two pulses 300ms apart, then 5s rest
-    setTimeout(function() {
-      triggerBeat(1.0);
-      setTimeout(function() {
-        triggerBeat(0.7);
-        scheduleBeat();
-      }, 300);
-    }, 5000);
-  }
-
-  var activePulses = [];
-
-  function triggerBeat(intensity) {
-    activePulses.push({r:0, maxR:Math.min(W,H)*0.6, alpha:intensity, t:0, maxT:40, intensity:intensity});
-    // Fire lightning immediately on beat
-    drawBase();
-    firePulse(intensity);
-  }
-
-  // Animation loop
-  var frame = 0;
   function animate() {
     requestAnimationFrame(animate);
-    frame++;
-
-    // Redraw base every frame
     drawBase();
-
-    // Draw expanding pulse rings
-    activePulses = activePulses.filter(function(p) {
-      p.t++;
-      var progress = p.t / p.maxT;
-      p.r = p.maxR * Math.pow(progress, 0.5);
-      var alpha = p.alpha * (1-progress) * 0.15;
-      if (alpha > 0.002) {
-        drawPulseRing(p.r, alpha);
+    rings.forEach(r=>{
+      r.t++;
+      r.r=r.maxR*Math.pow(r.t/r.maxT,0.5);
+      const a=r.alpha*(1-r.t/r.maxT)*0.12;
+      if(a>0.002){
+        const cx=W*0.5,cy=H*0.42;
+        const g=ctx.createRadialGradient(cx,cy,r.r*0.7,cx,cy,r.r);
+        g.addColorStop(0,'rgba(245,208,0,0)');
+        g.addColorStop(0.7,'rgba(245,208,0,'+a+')');
+        g.addColorStop(1,'rgba(245,208,0,0)');
+        ctx.fillStyle=g;ctx.fillRect(cx-r.r,cy-r.r,r.r*2,r.r*2);
       }
-      return p.t < p.maxT;
     });
+    while(rings.length&&rings[0].t>=rings[0].maxT)rings.shift();
   }
 
+  function scheduleBeat() {
+    setTimeout(()=>{
+      beat(1.0);
+      setTimeout(()=>{ beat(0.65); scheduleBeat(); },300);
+    },5000);
+  }
+
+  drawBase();
   animate();
   scheduleBeat();
 })();
